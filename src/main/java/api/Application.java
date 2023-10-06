@@ -1,6 +1,9 @@
 package api;
 
 
+import api.model.Player;
+import api.service.TransactionService;
+
 public class Application {
     public static void main(String[] args) {
 
@@ -19,7 +22,7 @@ public class Application {
 //        We can see Player info with his List of transactions
         System.out.println(p1);
 
-//        If we don`t have enough money to withdraw - service will cancel transaction and pontificate as about the problem
+//        If we don`t have enough money to withdraw - service will cancel transaction and send notification about the problem
         service.withdraw(p1, 10000);
     }
 }

@@ -1,10 +1,10 @@
-package api;
+package api.model;
 
 import java.util.Date;
 /*
  * Blueprint of a Transaction that regulates through the Transaction Service
  * */
-class Transaction {
+public class Transaction {
     private long transactionId;
     private int player;
     private long amount;

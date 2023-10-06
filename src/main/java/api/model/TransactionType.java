@@ -1,4 +1,4 @@
-package api;
+package api.model;
 
 /*
 * Different types of transaction

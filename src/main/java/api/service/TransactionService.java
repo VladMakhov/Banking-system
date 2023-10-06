@@ -1,4 +1,8 @@
-package api;
+package api.service;
+
+import api.model.Player;
+import api.model.Transaction;
+import api.model.TransactionType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +12,7 @@ import java.util.Date;
 * You can manipulate with player balance by making transactions such as deposit (add money) and withdrawal (take money)
 * Transactions have their own time stamp and unique ID as well.
 * */
-class TransactionService {
+public class TransactionService {
 
 //    Auto incrementing ID`s
     private static int PLAYER_ID = 1;
