@@ -1,10 +1,19 @@
 package api;
 
+import java.util.Date;
+/*
+ * Blueprint of a Transaction that regulates through the Transaction Service
+ * */
 class Transaction {
     private long transactionId;
     private int player;
     private long amount;
     private TransactionType type;
+    private Date date;
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;

@@ -3,6 +3,9 @@ package api;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* Blueprint of a Player that regulates through the Transaction Service
+*  */
 public class Player {
     private int id;
     private String username;

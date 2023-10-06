@@ -1,12 +1,20 @@
 package api;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+/*
+* Service that provides functionality to create Player with unique ID, his own balance and List of transactions.
+* You can manipulate with player balance by making transactions such as deposit (add money) and withdrawal (take money)
+* Transactions have their own time stamp and unique ID as well.
+* */
 class TransactionService {
 
+//    Auto incrementing ID`s
     private static int PLAYER_ID = 1;
     private static int TRANSACTION_ID = 1;
 
+//    You should create players through special method
     public Player createPlayer(String username) {
         Player player = new Player();
 
@@ -18,6 +26,7 @@ class TransactionService {
         return player;
     }
 
+//    Private method to regulate transactions
     private static Transaction createTransaction(Player p, long amount, TransactionType type) {
         Transaction transaction = new Transaction();
 
@@ -25,10 +34,12 @@ class TransactionService {
         transaction.setPlayer(p.getId());
         transaction.setAmount(amount);
         transaction.setType(type);
+        transaction.setDate(new Date());
 
         return transaction;
     }
 
+//    Method to withdraw money from Player with he got enough
     public boolean withdraw(Player p, long amount) {
         if (p.getBalance() - amount < 0) {
             System.out.println("Player " + p.getUsername() + " don`t have enough money");
@@ -45,6 +56,7 @@ class TransactionService {
         }
     }
 
+//    Method to add money to Player balance
     public void deposit(Player p, long amount) {
 
         p.setBalance(p.getBalance() + amount);
