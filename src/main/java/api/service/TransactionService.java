@@ -5,13 +5,12 @@ import api.model.Transaction;
 import api.model.TransactionType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /*
 * Service that provides functionality to create Player with unique ID, his own balance and List of transactions.
 * You can manipulate with player balance by making transactions such as deposit (add money) and withdrawal (take money)
-* Transactions have their own time stamp and unique ID as well.
+* Transactions have their own unique ID as well.
 * */
 public class TransactionService {
 
@@ -40,7 +39,6 @@ public class TransactionService {
         transaction.setPlayer(p.getId());
         transaction.setAmount(amount);
         transaction.setType(type);
-        transaction.setDate(new Date(System.currentTimeMillis()));
 
         return transaction;
     }
@@ -63,7 +61,10 @@ public class TransactionService {
 //    Get formatted transaction history
     public String getTransactionHistory(Player p) {
         StringBuilder str = new StringBuilder();
-        str.append("\nID" + " Amount " + "  Type\n");
+        str.append("""
+                
+                ID Amount   Type
+                """);
         List<String> stringStream = p.getTransactions().stream()
                 .map(tr -> tr.getTransactionId() + "   " + tr.getAmount() + "   " + tr.getType()).toList();
         for (int i = stringStream.size() - 1; i >= 0; i--) {
@@ -74,9 +75,8 @@ public class TransactionService {
 
 //    Get formatted Player info
     public String getPlayerInfo(Player player) {
-        String string = "\nId: " + player.getId() +
+        return "Id: " + player.getId() +
                 "\nName: " + player.getUsername() +
-                "\nBalance: " + player.getBalance() + "\n";
-        return string;
+                "\nBalance: " + player.getBalance();
     }
 }

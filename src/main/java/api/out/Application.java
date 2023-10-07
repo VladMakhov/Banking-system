@@ -10,30 +10,49 @@ import java.util.*;
 /*
  * Output class.
  * Using console to communicate with service.
- * You can create account or log in to existing.
- * Inside account you are able to deposit money or withdraw if you have enough.
- * Also, you can see info and transaction history with unique id of transaction.
- * Everything you do on one account is not affection others.
- * If program is terminated all Information will be erased.
- * */
+ * Everything you do on one account does not affect others.
+ * * */
 public class Application {
     public static void main(String[] args) {
+
         TransactionService service = new TransactionService();
         Scanner scanner = new Scanner(System.in);
-        System.out.print("""
+        Map<String, Player> accounts = new HashMap<>();
+        Player player;
+        String welcome = """
                  _________________________________________________________________________
                 | Good day, sir!                                                          |
                 | This is bank of Ylab University.                                        |
                 | To proceed you need to either register Account or Log in to existing.   |
                 |_________________________________________________________________________|
-                    """);
+                """;
+        String instruction = """
+                 _________________________________________________
+                | Instruction:                                    |
+                | To check info type 'info'                       |
+                | To deposit money type 'deposit'                 |
+                | To withdraw money type 'withdraw'               |
+                | To see your transaction history type 'history'  |
+                | To see instruction type 'help'                  |
+                | To log out type 'exit'                          |
+                |_________________________________________________|
+                """;
 
-        Map<String, Player> accounts = new HashMap<>();
-        Player player;
-        var a = "start";
+        System.out.print(welcome);
+        var program = "start";
 
-        while (!a.equals("end")) {
-            System.out.println("\n'register' to create new Account or 'login' to connect to existing one?");
+        /*
+         * Main execution code that allows to communicate with application with console interface
+         * P.S. Yes, code is big, but I am not sure how to decompose this and not lose infinite loop.
+         *
+         * Basically, it works like this:
+         * 1) | first layer | Home page - you can register accounts or log in to one.
+         * 2) | second layer | After logging you able to manage account finances.
+         * 3) You can exit account and exit program, but data will be erased due to program memory storage.
+         * */
+        while (!program.equals("end")) {
+            System.out.println("""
+                    Type 'register' to create new Account or 'login' to connect to existing one?""");
             System.out.print(">> ");
             var in = scanner.nextLine().toLowerCase();
 
@@ -49,7 +68,7 @@ public class Application {
                     } else {
                         Player p = service.createPlayer(name, password);
                         accounts.put(name, p);
-                        System.out.println("Account is created");
+                        System.out.println("--Account is created--");
                     }
                 }
                 case "login" -> {
@@ -60,20 +79,12 @@ public class Application {
 
                     if (accounts.containsKey(name)) {
                         if (!password.equals(accounts.get(name).getPassword())) {
-                            System.out.println("Wrong password");
+                            System.out.println("--Wrong password--");
                             break;
                         }
                         player = accounts.get(name);
-                        System.out.println("""
-                                 _________________________________________________
-                                | Instruction:                                    |
-                                | To check info press 'info'                      |
-                                | To deposit money press 'deposit'                |
-                                | To withdraw money press 'withdraw'              |
-                                | To see your transaction history press 'history' |
-                                | To quit program press 'exit'                    |
-                                |_________________________________________________|
-                                    """);
+                        System.out.println("--Welcome, " + player.getUsername() + "!--");
+                        System.out.print(instruction);
                         var input = "go";
                         while (!input.equals("exit")) {
                             System.out.print(">> ");
@@ -91,7 +102,7 @@ public class Application {
                                         service.deposit(player, amount);
                                         System.out.println("balance: " + player.getBalance());
                                     } catch (NumberFormatException e) {
-                                        System.out.println("Incorrect value");
+                                        System.out.println("--Incorrect value--");
                                     }
                                 }
                                 case "withdraw" -> {
@@ -108,22 +119,23 @@ public class Application {
                                             System.out.println("Not enough money on your account");
                                         }
                                     } catch (NumberFormatException e) {
-                                        System.out.println("Incorrect value");
+                                        System.out.println("--Incorrect value--");
                                     }
 
                                 }
                                 case "history" -> System.out.println(service.getTransactionHistory(player));
                                 case "exit" -> {
                                 }
-                                default -> System.out.println("Incorrect command");
+                                case "help" -> System.out.println(instruction);
+                                default -> System.out.println("--Incorrect command--");
                             }
                         }
                     } else {
                         System.out.println("Account does not exist");
                     }
                 }
-                case "exit" -> a = "end";
-                default -> System.out.println("Unknown command");
+                case "exit" -> program = "end";
+                default -> System.out.println("--Incorrect command--");
             }
         }
 

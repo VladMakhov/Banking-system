@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+/*
+* Functionality is quit intuitive and not a lot of method to test
+* */
 public class TransactionServiceTest {
 
     TransactionService service = new TransactionService();
@@ -29,10 +32,11 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void withdrawal_correct() {
+    public void withdrawal() {
         Player player = service.createPlayer("Player", "123");
         Assert.assertEquals(0, player.getBalance());
         service.deposit(player, 1000);
-        Assert.assertEquals(1000, player.getBalance());
+        service.withdraw(player, 1000);
+        Assert.assertEquals(0, player.getBalance());
     }
 }

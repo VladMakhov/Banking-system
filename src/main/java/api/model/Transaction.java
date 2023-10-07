@@ -1,6 +1,6 @@
 package api.model;
 
-import java.util.Date;
+
 /*
  * Blueprint of a Transaction that regulates through the Transaction Service
  * */
@@ -9,11 +9,6 @@ public class Transaction {
     private int player;
     private long amount;
     private TransactionType type;
-    private Date date;
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;
@@ -35,20 +30,12 @@ public class Transaction {
         return transactionId;
     }
 
-    public int getPlayer() {
-        return player;
-    }
-
     public long getAmount() {
         return amount;
     }
 
     public TransactionType getType() {
         return type;
-    }
-
-    public Date getDate() {
-        return date;
     }
 
     @Override
