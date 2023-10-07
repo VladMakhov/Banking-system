@@ -25,28 +25,36 @@ public class Application {
         var a = "start";
 
         while (!a.equals("end")) {
-            System.out.println("'Sign up' or 'Log in'?");
+            System.out.println("'register' to create new Account or 'login' to connect to existing one?");
             System.out.print(">> ");
             var in = scanner.nextLine();
 
             switch (in) {
-                case "sign up" -> {
-                    System.out.println("Create new account as: ");
-                    System.out.print(">> ");
+                case "register" -> {
+                    System.out.print("Username: ");
                     var name = scanner.nextLine();
+                    System.out.print("Password: ");
+                    var password = scanner.nextLine();
+
                     if (accounts.containsKey(name)) {
                         System.out.println("Choose different name");
                     } else {
-                        Player p = service.createPlayer(name);
+                        Player p = service.createPlayer(name, password);
                         accounts.put(name, p);
                         System.out.println("Account is created");
                     }
                 }
-                case "log in" -> {
-                    System.out.println("Log in as: ");
-                    System.out.print(">> ");
+                case "login" -> {
+                    System.out.print("Username: ");
                     var name = scanner.nextLine();
+                    System.out.print("Password: ");
+                    var password = scanner.nextLine();
+
                     if (accounts.containsKey(name)) {
+                        if (!password.equals(accounts.get(name).getPassword())) {
+                            System.out.println("Wrong password");
+                            break;
+                        }
                         player = accounts.get(name);
                         System.out.println("""
              _________________________________________________

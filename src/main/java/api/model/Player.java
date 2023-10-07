@@ -9,6 +9,7 @@ import java.util.List;
 public class Player {
     private int id;
     private String username;
+    private String password;
     private long balance = 0;
     private List<Transaction> transactions = new ArrayList<>();
 
@@ -27,6 +28,14 @@ public class Player {
                 ", balance=" + balance +
                 ", transactions=" + stringBuilder +
                 '}';
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public int getId() {

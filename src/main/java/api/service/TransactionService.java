@@ -20,12 +20,13 @@ public class TransactionService {
     private static int TRANSACTION_ID = 1;
 
 //    You should create players through special method
-    public Player createPlayer(String username) {
+    public Player createPlayer(String username, String password) {
         Player player = new Player();
 
         player.setId(PLAYER_ID++);
         player.setUsername(username);
         player.setBalance(0);
+        player.setPassword(password);
         player.setTransactions(new ArrayList<>());
 
         return player;
