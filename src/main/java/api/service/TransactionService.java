@@ -6,6 +6,7 @@ import api.model.TransactionType;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /*
 * Service that provides functionality to create Player with unique ID, his own balance and List of transactions.
@@ -27,8 +28,6 @@ public class TransactionService {
         player.setBalance(0);
         player.setTransactions(new ArrayList<>());
 
-        System.out.println("Player " + player + " is created");
-
         return player;
     }
 
@@ -40,36 +39,36 @@ public class TransactionService {
         transaction.setPlayer(p.getId());
         transaction.setAmount(amount);
         transaction.setType(type);
-        transaction.setDate(new Date());
+        transaction.setDate(new Date(System.currentTimeMillis()));
 
         return transaction;
     }
 
 //    Method to withdraw money from Player if he got enough
     public void withdraw(Player p, long amount) {
-        if (p.getBalance() - amount < 0) {
-            System.out.println("Player " + p.getUsername() + " don`t have enough money");
-        } else {
-            p.setBalance(p.getBalance() - amount);
-
-            Transaction transaction = createTransaction(p, amount, TransactionType.WITHDRAWAL);
-
-            p.getTransactions().add(transaction);
-
-            System.out.println("You successfully withdraw: " + amount + " from your balance");
-        }
+        p.setBalance(p.getBalance() - amount);
+        Transaction transaction = createTransaction(p, amount, TransactionType.WITHDRAWAL);
+        p.getTransactions().add(transaction);
     }
 
 //    Method to add money to Player balance
     public void deposit(Player p, long amount) {
-
         p.setBalance(p.getBalance() + amount);
-
         Transaction transaction = createTransaction(p, amount, TransactionType.DEPOSIT);
-
         p.getTransactions().add(transaction);
 
-        System.out.println("You successfully deposit: " + amount + " to your balance");
+    }
+
+//    Get formatted transaction history
+    public String getTransactionHistory(Player p) {
+        StringBuilder str = new StringBuilder();
+
+        List<String> stringStream = p.getTransactions().stream()
+                .map(tr -> " " + tr.getTransactionId() + " " + tr.getType() + " " + tr.getAmount()).toList();
+        for (int i = stringStream.size() - 1; i >= 0; i--) {
+            str.append(stringStream.get(i)).append("\n");
+        }
+        return str.toString();
     }
 
 }

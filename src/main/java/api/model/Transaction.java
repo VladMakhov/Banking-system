@@ -31,6 +31,26 @@ public class Transaction {
         this.type = type;
     }
 
+    public long getTransactionId() {
+        return transactionId;
+    }
+
+    public int getPlayer() {
+        return player;
+    }
+
+    public long getAmount() {
+        return amount;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +

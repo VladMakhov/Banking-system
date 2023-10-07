@@ -4,27 +4,68 @@ package api;
 import api.model.Player;
 import api.service.TransactionService;
 
+
+import java.util.Scanner;
+
 public class Application {
     public static void main(String[] args) {
-
-//        First, we need to initialize Transaction Service
         TransactionService service = new TransactionService();
+        Scanner scanner = new Scanner(System.in);
 
-//        Second, creating player through service
-        Player p1 = service.createPlayer("Andrew");
+        System.out.print("""
+             _________________________________________________________________________
+            | Good day, sir!                                                          |
+            | This is national bank of america and we are ready to serve you.         |
+            | To proceed you need to either register Account or Log in to existing.   |
+            | Press sign up to create new Account                                     |
+            |_________________________________________________________________________|
+                """);
 
-//        Depositing
-        service.deposit(p1, 2000);
+        System.out.println("What is your name?");
+        System.out.print(">> ");
+        var name = scanner.nextLine();
 
-//        Withdrawing
-        service.withdraw(p1, 100);
+        Player player = service.createPlayer(name);
+        System.out.println("""
+             _________________________________________________
+            | Instruction:                                    |
+            | To check balance press 'balance'                |
+            | To deposit money press 'deposit'                |
+            | To withdraw money press 'withdraw'              |
+            | To see your transaction history press 'history' |
+            | To quit program press 'exit'                    |
+            |_________________________________________________|
+                """);
 
-//        We can see Player info with his List of transactions
-        System.out.println(p1);
+        var input = "go";
+        while (!input.equals("exit")) {
+            System.out.print(">> ");
+            input = scanner.nextLine();
 
-//        If we don`t have enough money to withdraw - service will cancel transaction and send notification about the problem
-        service.withdraw(p1, 10000);
+            switch (input) {
+                case "balance" -> System.out.println("balance: " + player.getBalance());
+                case "deposit" -> {
+                    System.out.print("How much money would you like to deposit: ");
+                    var amount = scanner.nextLine();
+                    service.deposit(player, Integer.parseInt(amount));
+
+                }
+                case "withdraw" -> {
+                    System.out.print("How much money would you like to withdraw: ");
+                    var amount = Integer.parseInt(scanner.nextLine());
+
+                    if (player.getBalance() - amount >= 0) {
+                        service.withdraw(player, amount);
+                    } else {
+                        System.out.println("Not enough money on your account");
+                    }
+
+                }
+                case "history" -> System.out.println(service.getTransactionHistory(player));
+                case "exit" -> {}
+                default -> System.out.println("Incorrect command");
+            }
+        }
+
     }
 }
-
-
