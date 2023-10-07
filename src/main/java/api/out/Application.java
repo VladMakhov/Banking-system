@@ -7,6 +7,15 @@ import api.service.TransactionService;
 
 import java.util.*;
 
+/*
+* Output class.
+* Using console to communicate with service.
+* You can create account or log in to existing.
+* Inside account you are able to deposit money or withdraw if you have enough.
+* Also, you can see info and transaction history with unique id of transaction.
+* Everything you do on one account is not affection others.
+* If program is terminated all Information is erased.
+* */
 public class Application {
     public static void main(String[] args) {
         TransactionService service = new TransactionService();
@@ -27,7 +36,7 @@ public class Application {
         while (!a.equals("end")) {
             System.out.println("'register' to create new Account or 'login' to connect to existing one?");
             System.out.print(">> ");
-            var in = scanner.nextLine();
+            var in = scanner.nextLine().toLowerCase();
 
             switch (in) {
                 case "register" -> {
