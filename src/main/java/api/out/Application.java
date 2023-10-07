@@ -8,33 +8,32 @@ import api.service.TransactionService;
 import java.util.*;
 
 /*
-* Output class.
-* Using console to communicate with service.
-* You can create account or log in to existing.
-* Inside account you are able to deposit money or withdraw if you have enough.
-* Also, you can see info and transaction history with unique id of transaction.
-* Everything you do on one account is not affection others.
-* If program is terminated all Information is erased.
-* */
+ * Output class.
+ * Using console to communicate with service.
+ * You can create account or log in to existing.
+ * Inside account you are able to deposit money or withdraw if you have enough.
+ * Also, you can see info and transaction history with unique id of transaction.
+ * Everything you do on one account is not affection others.
+ * If program is terminated all Information will be erased.
+ * */
 public class Application {
     public static void main(String[] args) {
         TransactionService service = new TransactionService();
         Scanner scanner = new Scanner(System.in);
         System.out.print("""
-             _________________________________________________________________________
-            | Good day, sir!                                                          |
-            | This is bank of Ylab University and we are ready to serve you.          |
-            | To proceed you need to either register Account or Log in to existing.   |
-            | Press sign up to create new Account                                     |
-            |_________________________________________________________________________|
-                """);
+                 _________________________________________________________________________
+                | Good day, sir!                                                          |
+                | This is bank of Ylab University.                                        |
+                | To proceed you need to either register Account or Log in to existing.   |
+                |_________________________________________________________________________|
+                    """);
 
         Map<String, Player> accounts = new HashMap<>();
         Player player;
         var a = "start";
 
         while (!a.equals("end")) {
-            System.out.println("'register' to create new Account or 'login' to connect to existing one?");
+            System.out.println("\n'register' to create new Account or 'login' to connect to existing one?");
             System.out.print(">> ");
             var in = scanner.nextLine().toLowerCase();
 
@@ -66,15 +65,15 @@ public class Application {
                         }
                         player = accounts.get(name);
                         System.out.println("""
-             _________________________________________________
-            | Instruction:                                    |
-            | To check info press 'info'                      |
-            | To deposit money press 'deposit'                |
-            | To withdraw money press 'withdraw'              |
-            | To see your transaction history press 'history' |
-            | To quit program press 'exit'                    |
-            |_________________________________________________|
-                """);
+                                 _________________________________________________
+                                | Instruction:                                    |
+                                | To check info press 'info'                      |
+                                | To deposit money press 'deposit'                |
+                                | To withdraw money press 'withdraw'              |
+                                | To see your transaction history press 'history' |
+                                | To quit program press 'exit'                    |
+                                |_________________________________________________|
+                                    """);
                         var input = "go";
                         while (!input.equals("exit")) {
                             System.out.print(">> ");
@@ -114,7 +113,8 @@ public class Application {
 
                                 }
                                 case "history" -> System.out.println(service.getTransactionHistory(player));
-                                case "exit" -> {}
+                                case "exit" -> {
+                                }
                                 default -> System.out.println("Incorrect command");
                             }
                         }
