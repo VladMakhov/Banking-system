@@ -27,6 +27,8 @@ public class TransactionService {
         player.setBalance(0);
         player.setTransactions(new ArrayList<>());
 
+        System.out.println("Player " + player + " is created");
+
         return player;
     }
 
@@ -43,11 +45,10 @@ public class TransactionService {
         return transaction;
     }
 
-//    Method to withdraw money from Player with he got enough
-    public boolean withdraw(Player p, long amount) {
+//    Method to withdraw money from Player if he got enough
+    public void withdraw(Player p, long amount) {
         if (p.getBalance() - amount < 0) {
             System.out.println("Player " + p.getUsername() + " don`t have enough money");
-            return false;
         } else {
             p.setBalance(p.getBalance() - amount);
 
@@ -56,7 +57,6 @@ public class TransactionService {
             p.getTransactions().add(transaction);
 
             System.out.println("You successfully withdraw: " + amount + " from your balance");
-            return true;
         }
     }
 

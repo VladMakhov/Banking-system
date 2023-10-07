@@ -35,10 +35,4 @@ public class TransactionServiceTest {
         service.deposit(player, 1000);
         Assert.assertEquals(1000, player.getBalance());
     }
-
-    @Test
-    public void withdrawal_exception() {
-        Player player = service.createPlayer("Player");
-        Assert.assertFalse(service.withdraw(player, 1000));
-    }
 }
