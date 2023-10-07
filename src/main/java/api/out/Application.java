@@ -18,6 +18,7 @@ public class Application {
         TransactionService service = new TransactionService();
         Scanner scanner = new Scanner(System.in);
         Map<String, Player> accounts = new HashMap<>();
+        List<String> logs = new ArrayList<>();
         Player player;
         String welcome = """
                  _________________________________________________________________________
@@ -69,6 +70,7 @@ public class Application {
                         Player p = service.createPlayer(name, password);
                         accounts.put(name, p);
                         System.out.println("--Account is created--");
+                        logs.add("\nAccount was created: " + p.getUsername());
                     }
                 }
                 case "login" -> {
@@ -83,6 +85,7 @@ public class Application {
                             break;
                         }
                         player = accounts.get(name);
+                        logs.add("\n" + player.getUsername()  + " has entered his account");
                         System.out.println("--Welcome, " + player.getUsername() + "!--");
                         System.out.print(instruction);
                         var input = "go";
@@ -91,7 +94,10 @@ public class Application {
                             input = scanner.nextLine().toLowerCase();
 
                             switch (input) {
-                                case "info" -> System.out.println(service.getPlayerInfo(player));
+                                case "info" -> {
+                                    System.out.println(service.getPlayerInfo(player));
+                                    logs.add("\n" + player.getUsername()  + " requested info");
+                                }
                                 case "deposit" -> {
                                     System.out.print("How much money would you like to deposit: ");
                                     try {
@@ -101,8 +107,10 @@ public class Application {
                                         }
                                         service.deposit(player, amount);
                                         System.out.println("balance: " + player.getBalance());
+                                        logs.add("\n" + player.getUsername()  + " made deposit transaction on " + amount);
                                     } catch (NumberFormatException e) {
                                         System.out.println("--Incorrect value--");
+                                        logs.add("\n" + player.getUsername()  + " failed deposit transaction");
                                     }
                                 }
                                 case "withdraw" -> {
@@ -115,18 +123,28 @@ public class Application {
                                         if (player.getBalance() - amount >= 0) {
                                             service.withdraw(player, amount);
                                             System.out.println("balance: " + player.getBalance());
+                                            logs.add("\n" + player.getUsername()  + " made withdrawing transaction on " + amount);
                                         } else {
                                             System.out.println("Not enough money on your account");
+                                            logs.add("\n" + player.getUsername()  + " failed deposit transaction");
                                         }
                                     } catch (NumberFormatException e) {
                                         System.out.println("--Incorrect value--");
+                                        logs.add("\n" + player.getUsername()  + " failed deposit transaction");
                                     }
 
                                 }
-                                case "history" -> System.out.println(service.getTransactionHistory(player));
-                                case "exit" -> {
+                                case "history" -> {
+                                    System.out.println(service.getTransactionHistory(player));
+                                    logs.add("\n" + player.getUsername()  + " requested transaction history");
                                 }
-                                case "help" -> System.out.println(instruction);
+                                case "exit" -> {
+                                    logs.add("\n" + player.getUsername()  + " exited his account");
+                                }
+                                case "help" -> {
+                                    System.out.println(instruction);
+                                    logs.add("\n" + player.getUsername()  + " requested help menu");
+                                }
                                 default -> System.out.println("--Incorrect command--");
                             }
                         }
@@ -134,10 +152,14 @@ public class Application {
                         System.out.println("Account does not exist");
                     }
                 }
-                case "exit" -> program = "end";
+                case "exit" -> {
+                    program = "end";
+                    logs.add("\nprogram exited\n");
+                }
                 default -> System.out.println("--Incorrect command--");
             }
         }
+        System.out.println(logs);
 
     }
 }
