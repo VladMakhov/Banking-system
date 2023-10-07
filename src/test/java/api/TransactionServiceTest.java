@@ -14,7 +14,7 @@ public class TransactionServiceTest {
 
     @Test
     public void createPlayer() {
-        Player player = service.createPlayer("Player");
+        Player player = service.createPlayer("Player", "123");
         Assert.assertEquals("Player", player.getUsername());
         Assert.assertEquals(0, player.getBalance());
         Assert.assertEquals(new ArrayList<>(), player.getTransactions());
@@ -22,7 +22,7 @@ public class TransactionServiceTest {
 
     @Test
     public void deposit() {
-        Player player = service.createPlayer("Player");
+        Player player = service.createPlayer("Player", "123");
         Assert.assertEquals(0, player.getBalance());
         service.deposit(player, 1000);
         Assert.assertEquals(1000, player.getBalance());
@@ -30,7 +30,7 @@ public class TransactionServiceTest {
 
     @Test
     public void withdrawal_correct() {
-        Player player = service.createPlayer("Player");
+        Player player = service.createPlayer("Player", "123");
         Assert.assertEquals(0, player.getBalance());
         service.deposit(player, 1000);
         Assert.assertEquals(1000, player.getBalance());
