@@ -62,9 +62,9 @@ public class TransactionService {
 //    Get formatted transaction history
     public String getTransactionHistory(Player p) {
         StringBuilder str = new StringBuilder();
-
+        str.append("ID" + " Amount " + "  Type\n");
         List<String> stringStream = p.getTransactions().stream()
-                .map(tr -> " " + tr.getTransactionId() + " " + tr.getType() + " " + tr.getAmount()).toList();
+                .map(tr -> tr.getTransactionId() + "   " + tr.getAmount() + "   " + tr.getType()).toList();
         for (int i = stringStream.size() - 1; i >= 0; i--) {
             str.append(stringStream.get(i)).append("\n");
         }

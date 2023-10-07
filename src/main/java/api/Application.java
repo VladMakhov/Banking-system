@@ -15,7 +15,7 @@ public class Application {
         System.out.print("""
              _________________________________________________________________________
             | Good day, sir!                                                          |
-            | This is national bank of america and we are ready to serve you.         |
+            | This is bank of Ylab University and we are ready to serve you.          |
             | To proceed you need to either register Account or Log in to existing.   |
             | Press sign up to create new Account                                     |
             |_________________________________________________________________________|
@@ -40,24 +40,38 @@ public class Application {
         var input = "go";
         while (!input.equals("exit")) {
             System.out.print(">> ");
-            input = scanner.nextLine();
+            input = scanner.nextLine().toLowerCase();
 
             switch (input) {
                 case "balance" -> System.out.println("balance: " + player.getBalance());
                 case "deposit" -> {
                     System.out.print("How much money would you like to deposit: ");
-                    var amount = scanner.nextLine();
-                    service.deposit(player, Integer.parseInt(amount));
-
+                    try {
+                        var amount = Integer.parseInt(scanner.nextLine());
+                        if (amount < 0) {
+                            throw new NumberFormatException();
+                        }
+                        service.deposit(player, amount);
+                        System.out.println("balance: " + player.getBalance());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Incorrect value");
+                    }
                 }
                 case "withdraw" -> {
                     System.out.print("How much money would you like to withdraw: ");
-                    var amount = Integer.parseInt(scanner.nextLine());
-
-                    if (player.getBalance() - amount >= 0) {
-                        service.withdraw(player, amount);
-                    } else {
-                        System.out.println("Not enough money on your account");
+                    try {
+                        var amount = Integer.parseInt(scanner.nextLine());
+                        if (amount < 0) {
+                            throw new NumberFormatException();
+                        }
+                        if (player.getBalance() - amount >= 0) {
+                            service.withdraw(player, amount);
+                            System.out.println("balance: " + player.getBalance());
+                        } else {
+                            System.out.println("Not enough money on your account");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Incorrect value");
                     }
 
                 }
