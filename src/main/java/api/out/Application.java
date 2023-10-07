@@ -1,0 +1,114 @@
+package api.out;
+
+
+import api.model.Player;
+import api.service.TransactionService;
+
+
+import java.util.*;
+
+public class Application {
+    public static void main(String[] args) {
+        TransactionService service = new TransactionService();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("""
+             _________________________________________________________________________
+            | Good day, sir!                                                          |
+            | This is bank of Ylab University and we are ready to serve you.          |
+            | To proceed you need to either register Account or Log in to existing.   |
+            | Press sign up to create new Account                                     |
+            |_________________________________________________________________________|
+                """);
+
+        Map<String, Player> accounts = new HashMap<>();
+        Player player;
+        var a = "start";
+
+        while (!a.equals("end")) {
+            System.out.println("'Sign up' or 'Log in'?");
+            System.out.print(">> ");
+            var in = scanner.nextLine();
+
+            switch (in) {
+                case "sign up" -> {
+                    System.out.println("Create new account as: ");
+                    System.out.print(">> ");
+                    var name = scanner.nextLine();
+                    if (accounts.containsKey(name)) {
+                        System.out.println("Choose different name");
+                    } else {
+                        Player p = service.createPlayer(name);
+                        accounts.put(name, p);
+                        System.out.println("Account is created");
+                    }
+                }
+                case "log in" -> {
+                    System.out.println("Log in as: ");
+                    System.out.print(">> ");
+                    var name = scanner.nextLine();
+                    if (accounts.containsKey(name)) {
+                        player = accounts.get(name);
+                        System.out.println("""
+             _________________________________________________
+            | Instruction:                                    |
+            | To check info press 'info'                      |
+            | To deposit money press 'deposit'                |
+            | To withdraw money press 'withdraw'              |
+            | To see your transaction history press 'history' |
+            | To quit program press 'exit'                    |
+            |_________________________________________________|
+                """);
+                        var input = "go";
+                        while (!input.equals("exit")) {
+                            System.out.print(">> ");
+                            input = scanner.nextLine().toLowerCase();
+
+                            switch (input) {
+                                case "info" -> System.out.println(service.getPlayerInfo(player));
+                                case "deposit" -> {
+                                    System.out.print("How much money would you like to deposit: ");
+                                    try {
+                                        var amount = Integer.parseInt(scanner.nextLine());
+                                        if (amount < 0) {
+                                            throw new NumberFormatException();
+                                        }
+                                        service.deposit(player, amount);
+                                        System.out.println("balance: " + player.getBalance());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Incorrect value");
+                                    }
+                                }
+                                case "withdraw" -> {
+                                    System.out.print("How much money would you like to withdraw: ");
+                                    try {
+                                        var amount = Integer.parseInt(scanner.nextLine());
+                                        if (amount < 0) {
+                                            throw new NumberFormatException();
+                                        }
+                                        if (player.getBalance() - amount >= 0) {
+                                            service.withdraw(player, amount);
+                                            System.out.println("balance: " + player.getBalance());
+                                        } else {
+                                            System.out.println("Not enough money on your account");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Incorrect value");
+                                    }
+
+                                }
+                                case "history" -> System.out.println(service.getTransactionHistory(player));
+                                case "exit" -> {}
+                                default -> System.out.println("Incorrect command");
+                            }
+                        }
+                    } else {
+                        System.out.println("Account does not exist");
+                    }
+                }
+                case "exit" -> a = "end";
+                default -> System.out.println("Unknown command");
+            }
+        }
+
+    }
+}

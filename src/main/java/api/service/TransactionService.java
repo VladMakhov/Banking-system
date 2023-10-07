@@ -62,7 +62,7 @@ public class TransactionService {
 //    Get formatted transaction history
     public String getTransactionHistory(Player p) {
         StringBuilder str = new StringBuilder();
-        str.append("ID" + " Amount " + "  Type\n");
+        str.append("\nID" + " Amount " + "  Type\n");
         List<String> stringStream = p.getTransactions().stream()
                 .map(tr -> tr.getTransactionId() + "   " + tr.getAmount() + "   " + tr.getType()).toList();
         for (int i = stringStream.size() - 1; i >= 0; i--) {
@@ -71,4 +71,11 @@ public class TransactionService {
         return str.toString();
     }
 
+//    Get formatted Player info
+    public String getPlayerInfo(Player player) {
+        String string = "\nId: " + player.getId() +
+                "\nName: " + player.getUsername() +
+                "\nBalance: " + player.getBalance() + "\n";
+        return string;
+    }
 }
