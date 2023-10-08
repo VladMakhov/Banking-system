@@ -1,8 +1,8 @@
 package api.out;
 
 
-import api.model.Player;
-import api.service.TransactionService;
+import api.model.Account;
+import api.service.WalletService;
 
 
 import java.util.*;
@@ -11,15 +11,14 @@ import java.util.*;
  * Output class.
  * Using console to communicate with service.
  * Everything you do on one account does not affect others.
- * * */
+ * */
 public class Application {
     public static void main(String[] args) {
 
-        TransactionService service = new TransactionService();
+        WalletService service = new WalletService();
         Scanner scanner = new Scanner(System.in);
-        Map<String, Player> accounts = new HashMap<>();
-        List<String> logs = new ArrayList<>();
-        Player player;
+
+        Account account;
         String welcome = """
                  _________________________________________________________________________
                 | Good day, sir!                                                          |
@@ -53,7 +52,7 @@ public class Application {
          * */
         while (!program.equals("end")) {
             System.out.println("""
-                    Type 'register' to create new Account or 'login' to connect to existing one?""");
+                    // Type 'register' to create new Account or 'login' to connect to existing one?""");
             System.out.print(">> ");
             var in = scanner.nextLine().toLowerCase();
 
@@ -64,13 +63,13 @@ public class Application {
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
 
-                    if (accounts.containsKey(name)) {
-                        System.out.println("Choose different name");
+                    if (service.getAccounts().containsKey(name)) {
+                        System.out.println("!!! Choose different name");
                     } else {
-                        Player p = service.createPlayer(name, password);
-                        accounts.put(name, p);
-                        System.out.println("--Account is created--");
-                        logs.add("\nAccount was created: " + p.getUsername());
+                        Account p = service.createAccount(name, password);
+                        service.getAccounts().put(name, p);
+                        System.out.println("// Account is created");
+                        service.getLogs().add("Account was created: " + p.getUsername());
                     }
                 }
                 case "login" -> {
@@ -79,14 +78,14 @@ public class Application {
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
 
-                    if (accounts.containsKey(name)) {
-                        if (!password.equals(accounts.get(name).getPassword())) {
-                            System.out.println("--Wrong password--");
+                    if (service.getAccounts().containsKey(name)) {
+                        if (!password.equals(service.getAccounts().get(name).getPassword())) {
+                            System.out.println("!!! Wrong password");
                             break;
                         }
-                        player = accounts.get(name);
-                        logs.add("\n" + player.getUsername()  + " has entered his account");
-                        System.out.println("--Welcome, " + player.getUsername() + "!--");
+                        account = service.getAccounts().get(name);
+                        service.getLogs().add(account.getUsername() + " has entered his account");
+                        System.out.println("// Welcome, " + account.getUsername() + "!");
                         System.out.print(instruction);
                         var input = "go";
                         while (!input.equals("exit")) {
@@ -94,72 +93,61 @@ public class Application {
                             input = scanner.nextLine().toLowerCase();
 
                             switch (input) {
-                                case "info" -> {
-                                    System.out.println(service.getPlayerInfo(player));
-                                    logs.add("\n" + player.getUsername()  + " requested info");
-                                }
                                 case "deposit" -> {
-                                    System.out.print("How much money would you like to deposit: ");
+                                    System.out.print("// How much money would you like to deposit: ");
                                     try {
                                         var amount = Integer.parseInt(scanner.nextLine());
-                                        if (amount < 0) {
-                                            throw new NumberFormatException();
-                                        }
-                                        service.deposit(player, amount);
-                                        System.out.println("balance: " + player.getBalance());
-                                        logs.add("\n" + player.getUsername()  + " made deposit transaction on " + amount);
+                                        long deposit = service.deposit(account, amount);
+                                        System.out.println("balance: " + deposit);
+                                        service.getLogs().add(account.getUsername() + " made deposit transaction on " + amount);
                                     } catch (NumberFormatException e) {
-                                        System.out.println("--Incorrect value--");
-                                        logs.add("\n" + player.getUsername()  + " failed deposit transaction");
+                                        System.out.println("!!! Incorrect value");
+                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
                                     }
                                 }
                                 case "withdraw" -> {
-                                    System.out.print("How much money would you like to withdraw: ");
+                                    System.out.print("// How much money would you like to withdraw: ");
                                     try {
                                         var amount = Integer.parseInt(scanner.nextLine());
-                                        if (amount < 0) {
-                                            throw new NumberFormatException();
-                                        }
-                                        if (player.getBalance() - amount >= 0) {
-                                            service.withdraw(player, amount);
-                                            System.out.println("balance: " + player.getBalance());
-                                            logs.add("\n" + player.getUsername()  + " made withdrawing transaction on " + amount);
-                                        } else {
-                                            System.out.println("Not enough money on your account");
-                                            logs.add("\n" + player.getUsername()  + " failed deposit transaction");
-                                        }
+                                        long withdraw = service.withdraw(account, amount);
+                                        System.out.println("balance: " + withdraw);
+                                        service.getLogs().add(account.getUsername() + " made withdrawing transaction on " + amount);
                                     } catch (NumberFormatException e) {
-                                        System.out.println("--Incorrect value--");
-                                        logs.add("\n" + player.getUsername()  + " failed deposit transaction");
+                                        System.out.println("!!! Incorrect value");
+                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
+                                    } catch (IllegalArgumentException e) {
+                                        System.out.println("!!! Not enough money on your account");
+                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
                                     }
-
+                                }
+                                case "info" -> {
+                                    System.out.println(service.getAccountInfo(account));
+                                    service.getLogs().add(account.getUsername() + " requested info");
                                 }
                                 case "history" -> {
-                                    System.out.println(service.getTransactionHistory(player));
-                                    logs.add("\n" + player.getUsername()  + " requested transaction history");
+                                    System.out.println(service.getTransactionHistory(account));
+                                    service.getLogs().add(account.getUsername() + " requested transaction history");
                                 }
-                                case "exit" -> {
-                                    logs.add("\n" + player.getUsername()  + " exited his account");
-                                }
+                                case "exit" -> service.getLogs().add(account.getUsername() + " exited his account");
                                 case "help" -> {
                                     System.out.println(instruction);
-                                    logs.add("\n" + player.getUsername()  + " requested help menu");
+                                    service.getLogs().add(account.getUsername() + " requested help menu");
                                 }
-                                default -> System.out.println("--Incorrect command--");
+                                default -> System.out.println("!!! Incorrect command");
                             }
                         }
                     } else {
-                        System.out.println("Account does not exist");
+                        System.out.println("!!! Account does not exist");
                     }
                 }
                 case "exit" -> {
                     program = "end";
-                    logs.add("\nprogram exited\n");
+                    service.getLogs().add("Program exited");
                 }
-                default -> System.out.println("--Incorrect command--");
+                default -> System.out.println("!!! Incorrect command");
             }
         }
-        System.out.println(logs);
-
+        System.out.println("Logs:");
+        service.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
     }
 }

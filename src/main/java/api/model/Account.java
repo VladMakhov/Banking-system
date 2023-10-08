@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-* Blueprint of a Player that regulates through the Transaction Service
+* Blueprint of a Player that regulates through the Wallet Service
 *  */
-public class Player {
+public class Account {
     private int id;
     private String username;
     private String password;
     private long balance = 0;
     private List<Transaction> transactions = new ArrayList<>();
 
-    public Player() {
+    public Account() {
     }
 
     @Override

@@ -2,11 +2,11 @@ package api.model;
 
 
 /*
- * Blueprint of a Transaction that regulates through the Transaction Service
+ * Blueprint of a Transaction that regulates through the Wallet Service
  * */
 public class Transaction {
     private long transactionId;
-    private int player;
+    private int accountId;
     private long amount;
     private TransactionType type;
 
@@ -14,8 +14,8 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public void setPlayer(int player) {
-        this.player = player;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public void setAmount(long amount) {
@@ -42,7 +42,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "transactionId=" + transactionId +
-                ", playerId=" + player +
+                ", accountId=" + accountId +
                 ", amount=" + amount +
                 ", type=" + type +
                 '}';
