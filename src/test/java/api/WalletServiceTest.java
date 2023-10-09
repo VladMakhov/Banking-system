@@ -2,6 +2,7 @@ package api;
 
 
 import api.model.Account;
+import api.service.BankingService;
 import api.service.WalletService;
 
 import org.junit.Assert;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class WalletServiceTest {
 
-    WalletService service = new WalletService();
+    BankingService service = new BankingService();
 
     @Test
     public void createAccount_returns_valid_empty_account() {
