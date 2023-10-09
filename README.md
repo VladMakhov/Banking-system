@@ -1,5 +1,7 @@
 # Ylab banking system (Java core + Collections)
 Version: Java 17
+
+To start project you need to run api/Application.class 
 ### Registration and Account management:
 ![img.png](img.png)
 ### Exception handling

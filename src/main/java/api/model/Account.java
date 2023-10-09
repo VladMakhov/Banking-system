@@ -1,24 +1,25 @@
 package api.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
 * Blueprint of a Player that regulates through the Wallet Service
 *  */
+
+
 public class Account {
     private final int id;
     private final String username;
     private final String password;
     private long balance;
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
-    public Account(int id, String username, String password) {
+    public Account(int id, String username, String password, long balance, List<Transaction> transactions) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.balance = 0;
-        this.transactions = new ArrayList<>();
+        this.balance = balance;
+        this.transactions = transactions;
     }
 
     public String getPassword() {
@@ -43,9 +44,5 @@ public class Account {
 
     public List<Transaction> getTransactions() {
         return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 }

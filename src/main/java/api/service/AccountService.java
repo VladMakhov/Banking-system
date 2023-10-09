@@ -12,15 +12,13 @@ import java.util.Map;
 public class AccountService {
 
     private static int ACCOUNT_ID = 1;
-    private static Map<String, Account> accounts = new HashMap<>();
+    private static final Map<String, Account> accounts = new HashMap<>();
 
     /*
      * Method accepts username and password to create and return new account
      * */
     public Account createAccount(String username, String password) {
-        Account account = new Account(ACCOUNT_ID++, username, password);
-        account.setTransactions(new ArrayList<>());
-        return account;
+        return new Account(ACCOUNT_ID++, username, password, 0, new ArrayList<>());
     }
 
     public void addAccountToStorage(String username, Account account) {

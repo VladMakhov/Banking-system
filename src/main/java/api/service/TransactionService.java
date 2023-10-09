@@ -5,9 +5,7 @@ import api.model.Transaction;
 import api.model.TransactionType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -22,11 +20,11 @@ public class TransactionService {
      * Method accepts Existing account and amount of money along with type of transaction
      * and creates and returns new transaction
      * */
-    public Transaction createTransaction(Account account, long amount, TransactionType type) {
-        return new Transaction(TRANSACTION_ID++, account.getId(), amount, type);
+    public Transaction createTransaction(long amount, TransactionType type) {
+        return new Transaction(TRANSACTION_ID++, amount, type);
     }
 
-    private static List<String> logs = new ArrayList<>();
+    private static final List<String> logs = new ArrayList<>();
 
     /*
      * Method that create a formatted result of account transaction history
@@ -39,7 +37,7 @@ public class TransactionService {
                 """);
 
         String transactions = account.getTransactions().stream()
-                .map(tr -> tr.getTransactionId() + "   " + tr.getAmount() + "   " + tr.getType())
+                .map(tr -> tr.transactionId() + "   " + tr.amount() + "   " + tr.type())
                 .collect(Collectors.joining("\n"));
 
         return formattedResult.append(transactions).toString();

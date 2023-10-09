@@ -42,7 +42,6 @@ public class Application {
 
         /*
          * Main execution code that allows to communicate with application with console interface
-         * P.S. Yes, code is big, but I am not sure how to decompose this and not lose infinite loop.
          *
          * Basically, it works like this:
          * 1) | first layer | Home page - you can register accounts or log in to one.
@@ -58,35 +57,24 @@ public class Application {
             switch (in) {
                 case "register" -> {
                     System.out.print("Username: ");
-                    var name = scanner.nextLine();
+                    var username = scanner.nextLine();
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
-
-                    if (service.getAccounts().containsKey(name)) {
-                        System.out.println("!!! Choose different name");
-                    } else {
-                        Account p = service.createAccount(name, password);
-                        service.getAccounts().put(name, p);
-                        System.out.println("// Account is created");
-                        service.getLogs().add("Account was created: " + p.getUsername());
-                    }
+                    service.createAccount(username, password);
                 }
+
                 case "login" -> {
                     System.out.print("Username: ");
-                    var name = scanner.nextLine();
+                    var username = scanner.nextLine();
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
 
-                    if (service.getAccounts().containsKey(name)) {
-                        if (!password.equals(service.getAccounts().get(name).getPassword())) {
-                            System.out.println("!!! Wrong password");
-                            break;
-                        }
-                        account = service.getAccounts().get(name);
-                        service.getLogs().add(account.getUsername() + " has entered his account");
-                        System.out.println("// Welcome, " + account.getUsername() + "!");
-                        System.out.print(instruction);
-                        var input = "go";
+                    account = service.loginAccount(username, password);
+
+                    if (account != null) {
+                        System.out.println("// Welcome, " + account.getUsername() + "!\n" + instruction);
+                        var input = "start";
+
                         while (!input.equals("exit")) {
                             System.out.print(">> ");
                             input = scanner.nextLine().toLowerCase();
@@ -94,54 +82,30 @@ public class Application {
                             switch (input) {
                                 case "deposit" -> {
                                     System.out.print("// How much money would you like to deposit: ");
-                                    try {
-                                        var amount = Integer.parseInt(scanner.nextLine());
-                                        long deposit = service.deposit(account, amount);
-                                        System.out.println("balance: " + deposit);
-                                        service.getLogs().add(account.getUsername() + " made deposit transaction on " + amount);
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("!!! Incorrect value");
-                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
-                                    }
+                                    var amount = scanner.nextLine();
+                                    service.deposit(account, amount);
                                 }
                                 case "withdraw" -> {
                                     System.out.print("// How much money would you like to withdraw: ");
-                                    try {
-                                        var amount = Integer.parseInt(scanner.nextLine());
-                                        long withdraw = service.withdraw(account, amount);
-                                        System.out.println("balance: " + withdraw);
-                                        service.getLogs().add(account.getUsername() + " made withdrawing transaction on " + amount);
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("!!! Incorrect value");
-                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
-                                    } catch (IllegalArgumentException e) {
-                                        System.out.println("!!! Not enough money on your account");
-                                        service.getLogs().add(account.getUsername() + " failed deposit transaction");
-                                    }
+                                    var amount = scanner.nextLine();
+                                    service.withdraw(account, amount);
                                 }
-                                case "info" -> {
-                                    System.out.println(service.getAccountInfo(account));
-                                    service.getLogs().add(account.getUsername() + " requested info");
-                                }
-                                case "history" -> {
-                                    System.out.println(service.getTransactionHistory(account));
-                                    service.getLogs().add(account.getUsername() + " requested transaction history");
-                                }
-                                case "exit" -> service.getLogs().add(account.getUsername() + " exited his account");
+                                case "info" -> System.out.println(service.getAccountInfo(account));
+                                case "history" -> System.out.println(service.getTransactionHistory(account));
+                                case "exit" -> service.addToLogs(account.getUsername() + " exited his account");
                                 case "help" -> {
                                     System.out.println(instruction);
-                                    service.getLogs().add(account.getUsername() + " requested help menu");
+                                    service.addToLogs(account.getUsername() + " requested help menu");
                                 }
                                 default -> System.out.println("!!! Incorrect command");
                             }
                         }
-                    } else {
-                        System.out.println("!!! Account does not exist");
                     }
+
                 }
                 case "exit" -> {
                     program = "end";
-                    service.getLogs().add("Program exited");
+                    service.addToLogs("Program exited");
                 }
                 default -> System.out.println("!!! Incorrect command");
             }
