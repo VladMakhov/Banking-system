@@ -5,24 +5,15 @@ package api.model;
  * Blueprint of a Transaction that regulates through the Wallet Service
  * */
 public class Transaction {
-    private long transactionId;
-    private int accountId;
-    private long amount;
-    private TransactionType type;
+    private final long transactionId;
+    private final int accountId;
+    private final long amount;
+    private final TransactionType type;
 
-    public void setTransactionId(long transactionId) {
+    public Transaction(long transactionId, int accountId, long amount, TransactionType type) {
         this.transactionId = transactionId;
-    }
-
-    public void setAccountId(int accountId) {
         this.accountId = accountId;
-    }
-
-    public void setAmount(long amount) {
         this.amount = amount;
-    }
-
-    public void setType(TransactionType type) {
         this.type = type;
     }
 

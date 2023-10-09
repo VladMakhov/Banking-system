@@ -1,11 +1,10 @@
-package api.out;
+package api;
 
 
 import api.model.Account;
-import api.service.WalletService;
+import api.service.BankingService;
 
-
-import java.util.*;
+import java.util.Scanner;
 
 /*
  * Output class.
@@ -14,8 +13,8 @@ import java.util.*;
  * */
 public class Application {
     public static void main(String[] args) {
+        BankingService service = new BankingService();
 
-        WalletService service = new WalletService();
         Scanner scanner = new Scanner(System.in);
 
         Account account;

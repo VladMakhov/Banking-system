@@ -7,31 +7,18 @@ import java.util.List;
 * Blueprint of a Player that regulates through the Wallet Service
 *  */
 public class Account {
-    private int id;
-    private String username;
-    private String password;
-    private long balance = 0;
-    private List<Transaction> transactions = new ArrayList<>();
+    private final int id;
+    private final String username;
+    private final String password;
+    private long balance;
+    private List<Transaction> transactions;
 
-    public Account() {
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (var t : transactions) {
-            stringBuilder.append(t);
-        }
-        return "Player{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", balance=" + balance +
-                ", transactions=" + stringBuilder +
-                '}';
-    }
-
-    public void setPassword(String password) {
+    public Account(int id, String username, String password) {
+        this.id = id;
+        this.username = username;
         this.password = password;
+        this.balance = 0;
+        this.transactions = new ArrayList<>();
     }
 
     public String getPassword() {
@@ -42,16 +29,8 @@ public class Account {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public long getBalance() {
