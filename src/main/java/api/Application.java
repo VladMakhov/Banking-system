@@ -2,7 +2,8 @@ package api;
 
 
 import api.model.Account;
-import api.service.BankingService;
+import api.facade.BankFacade;
+import api.facade.BankFacadeImpl;
 
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ import java.util.Scanner;
  * */
 public class Application {
     public static void main(String[] args) {
-        BankingService service = new BankingService();
+        BankFacade service = new BankFacadeImpl();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -69,7 +70,7 @@ public class Application {
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
 
-                    account = service.loginAccount(username, password);
+                    account = service.validateAccount(username, password);
 
                     if (account != null) {
                         System.out.println("// Welcome, " + account.getUsername() + "!\n" + instruction);
@@ -92,10 +93,10 @@ public class Application {
                                 }
                                 case "info" -> System.out.println(service.getAccountInfo(account));
                                 case "history" -> System.out.println(service.getTransactionHistory(account));
-                                case "exit" -> service.addToLogs(account.getUsername() + " exited his account");
+                                case "exit" -> service.addLog(account.getUsername() + " exited his account");
                                 case "help" -> {
                                     System.out.println(instruction);
-                                    service.addToLogs(account.getUsername() + " requested help menu");
+                                    service.addLog(account.getUsername() + " requested help menu");
                                 }
                                 default -> System.out.println("!!! Incorrect command");
                             }
@@ -105,7 +106,7 @@ public class Application {
                 }
                 case "exit" -> {
                     program = "end";
-                    service.addToLogs("Program exited");
+                    service.addLog("Program exited");
                 }
                 default -> System.out.println("!!! Incorrect command");
             }

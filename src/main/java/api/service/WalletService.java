@@ -1,7 +1,6 @@
 package api.service;
 
 import api.model.Account;
-import api.model.Transaction;
 import api.model.TransactionType;
 
 /*
@@ -26,8 +25,7 @@ public class WalletService {
             throw new NumberFormatException("Can not subtract negative value");
         }
         account.setBalance(account.getBalance() - amount);
-        Transaction transaction = transactionService.createTransaction(amount, TransactionType.WITHDRAWAL);
-        account.getTransactions().add(transaction);
+        transactionService.createTransaction(amount, account.getUsername(), TransactionType.WITHDRAWAL);
     }
 
     /*
@@ -35,11 +33,10 @@ public class WalletService {
     * */
     public void deposit(Account account, long amount) {
         if (amount <= 0) {
-            throw new NumberFormatException("Can not add negative value");
+            throw new IllegalArgumentException("Can not add negative value");
+        } else {
+            account.setBalance(account.getBalance() + amount);
+            transactionService.createTransaction(amount, account.getUsername(), TransactionType.DEPOSIT);
         }
-        account.setBalance(account.getBalance() + amount);
-        Transaction transaction = transactionService.createTransaction(amount, TransactionType.DEPOSIT);
-        account.getTransactions().add(transaction);
     }
-
 }

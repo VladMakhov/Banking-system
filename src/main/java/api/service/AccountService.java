@@ -1,5 +1,7 @@
 package api.service;
 
+import api.exception.AccountExistException;
+import api.exception.AccountNotFoundException;
 import api.model.Account;
 
 import java.util.ArrayList;
@@ -17,16 +19,24 @@ public class AccountService {
     /*
      * Method accepts username and password to create and return new account
      * */
-    public Account createAccount(String username, String password) {
-        return new Account(ACCOUNT_ID++, username, password, 0, new ArrayList<>());
+    public void createAccount(String username, String password) {
+        if (!accounts.containsKey(username)) {
+            addAccountToStorage(new Account(ACCOUNT_ID++, username, password, 0, new ArrayList<>()));
+        } else {
+            throw new AccountExistException("Account with name: " + username + " already exist");
+        }
     }
 
-    public void addAccountToStorage(String username, Account account) {
-        accounts.put(username, account);
+    private static void addAccountToStorage(Account account) {
+        accounts.put(account.getUsername(), account);
     }
 
-    public Map<String, Account> getAccounts() {
-        return accounts;
+    public Account getAccountByName(String username) {
+        if (accounts.containsKey(username)) {
+            return accounts.get(username);
+        } else {
+            throw new AccountNotFoundException("Account with name: " + username + " not found");
+        }
     }
 
     public String getAccountInfo(Account account) {
