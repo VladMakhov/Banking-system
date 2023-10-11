@@ -1,9 +1,9 @@
 package conrtoller;
 
 
-import model.Account;
 import dispatcher.Dispatcher;
 import dispatcher.DispatcherImpl;
+import model.Account;
 
 import java.util.Scanner;
 
@@ -13,7 +13,8 @@ import java.util.Scanner;
  * Everything you do on one account does not affect others.
  * */
 public class Controller {
-    public static void main(String[] args) {
+
+    public void start() {
         Dispatcher dispatcher = new DispatcherImpl();
         Account account;
 
@@ -109,6 +110,5 @@ public class Controller {
         System.out.println("Logs:");
         dispatcher.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
     }
-
 
 }

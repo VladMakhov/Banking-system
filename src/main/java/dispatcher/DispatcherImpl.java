@@ -3,10 +3,13 @@ package dispatcher;
 import exception.AccountExistException;
 import exception.AccountNotFoundException;
 import model.Account;
+import service.AccountService;
+import service.FinanceService;
+import service.TransactionService;
 import service.classes.AccountServiceImpl;
+import service.classes.FinanceServiceImpl;
 import service.classes.LogService;
 import service.classes.TransactionServiceImpl;
-import service.classes.FinanceServiceImpl;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,15 +21,15 @@ import java.util.Objects;
 * */
 public class DispatcherImpl implements Dispatcher {
 
-    private final FinanceServiceImpl financeServiceImpl;
-    private final AccountServiceImpl accountServiceImpl;
+    private final FinanceService financeService;
+    private final AccountService accountService;
     private final LogService logService;
-    private final TransactionServiceImpl transactionServiceImpl;
+    private final TransactionService transactionService;
 
     public DispatcherImpl() {
-        this.financeServiceImpl = new FinanceServiceImpl();
-        this.accountServiceImpl = new AccountServiceImpl();
-        this.transactionServiceImpl = new TransactionServiceImpl();
+        this.financeService = new FinanceServiceImpl();
+        this.accountService = new AccountServiceImpl();
+        this.transactionService = new TransactionServiceImpl();
         this.logService = new LogService();
     }
 
@@ -43,7 +46,7 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public boolean createAccount(String username, String password) {
         try {
-            accountServiceImpl.createAccount(username, password);
+            accountService.createAccount(username, password);
             addLog("Account created with name: " + username);
             return true;
         } catch (AccountExistException e) {
@@ -56,13 +59,13 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public String getAccountInfo(Account account) {
         addLog(account.getUsername() + " requested info");
-        return accountServiceImpl.getAccountInfo(account);
+        return accountService.getAccountInfo(account);
     }
 
     @Override
     public Account validateAccount(String username, String password) {
         try {
-            Account account = accountServiceImpl.getAccountByName(username);
+            Account account = accountService.getAccountByName(username);
             if (Objects.equals(account.getPassword(), password)) {
                 addLog(username + " has entered his account");
                 return account;
@@ -80,7 +83,7 @@ public class DispatcherImpl implements Dispatcher {
     public void deposit(Account account, String unparsed) {
         try {
             long amount = Integer.parseInt(unparsed);
-            financeServiceImpl.deposit(account, amount);
+            financeService.deposit(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made deposit transaction on " + amount);
         } catch (NumberFormatException e) {
@@ -96,7 +99,7 @@ public class DispatcherImpl implements Dispatcher {
     public void withdraw(Account account, String unparsed) {
         try {
             long amount = Integer.parseInt(unparsed);
-            financeServiceImpl.withdraw(account, amount);
+            financeService.withdraw(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made withdrawing transaction on " + amount);
         } catch (NumberFormatException e) {
@@ -112,7 +115,7 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public String getTransactionHistory(Account account) {
         addLog(account.getUsername() + " requested transaction history");
-        return transactionServiceImpl.getTransactionHistory(account);
+        return transactionService.getTransactionHistory(account);
     }
 
 }

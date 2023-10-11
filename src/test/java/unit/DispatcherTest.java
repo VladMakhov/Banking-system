@@ -64,7 +64,7 @@ public class DispatcherTest {
     }
 
     @Test
-    @DisplayName("Making valid withdrawal - returns exception")
+    @DisplayName("Making invalid withdrawal - returns exception")
     public void withdrawal_throws_exception() {
         Assertions.assertEquals(0, account.getBalance());
         dispatcher.deposit(account, "1000");

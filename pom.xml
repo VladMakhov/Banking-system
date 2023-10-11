@@ -32,7 +32,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>conrtoller.Controller</mainClass>
+                            <mainClass>ApplicationStarter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
