@@ -23,8 +23,7 @@ public class Controller {
         String welcome = """
                 Good day, sir!
                 This is bank of Ylab University.
-                To proceed you need to either register Account or Log in to existing.
-                """;
+                To proceed you need to either register Account or Log in to existing.""";
         String instruction = """
                 Instruction:
                 To check info type 'info'
@@ -32,10 +31,9 @@ public class Controller {
                 To withdraw money type 'withdraw'
                 To see your transaction history type 'history'
                 To see instruction type 'help'
-                To log out type 'exit'
-                """;
+                To log out type 'exit'""";
 
-        System.out.println("\n" + welcome);
+        System.out.println(welcome);
         var program = "start";
 
         /*
@@ -69,7 +67,7 @@ public class Controller {
                     account = dispatcher.validateAccount(username, password);
 
                     if (account != null) {
-                        System.out.println("\nWelcome, " + account.getUsername() + "!\n\n" + instruction);
+                        System.out.println("Welcome, " + account.getUsername() + "!\n" + instruction);
                         var input = "start";
 
                         while (!input.equals("exit")) {
