@@ -1,20 +1,20 @@
-package api;
+package conrtoller;
 
 
-import api.model.Account;
-import api.facade.BankFacade;
-import api.facade.BankFacadeImpl;
+import model.Account;
+import dispatcher.Dispatcher;
+import dispatcher.DispatcherImpl;
 
 import java.util.Scanner;
 
 /*
- * Output class.
+ * Controller class.
  * Using console to communicate with service.
  * Everything you do on one account does not affect others.
  * */
-public class Application {
+public class Controller {
     public static void main(String[] args) {
-        BankFacade service = new BankFacadeImpl();
+        Dispatcher dispatcher = new DispatcherImpl();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -45,9 +45,8 @@ public class Application {
          * Main execution code that allows to communicate with application with console interface
          *
          * Basically, it works like this:
-         * 1) | first layer | Home page - you can register accounts or log in to one.
-         * 2) | second layer | After logging you able to manage account finances.
-         * 3) You can exit account and exit program, but data will be erased due to program memory storage.
+         * | first layer | Home page - you can register accounts or log in to one.
+         * | second layer | After logging you able to manage account finances.
          * */
         while (!program.equals("end")) {
             System.out.println("""
@@ -61,16 +60,15 @@ public class Application {
                     var username = scanner.nextLine();
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
-                    service.createAccount(username, password);
+                    dispatcher.createAccount(username, password);
                 }
-
                 case "login" -> {
                     System.out.print("Username: ");
                     var username = scanner.nextLine();
                     System.out.print("Password: ");
                     var password = scanner.nextLine();
 
-                    account = service.validateAccount(username, password);
+                    account = dispatcher.validateAccount(username, password);
 
                     if (account != null) {
                         System.out.println("// Welcome, " + account.getUsername() + "!\n" + instruction);
@@ -84,19 +82,19 @@ public class Application {
                                 case "deposit" -> {
                                     System.out.print("// How much money would you like to deposit: ");
                                     var amount = scanner.nextLine();
-                                    service.deposit(account, amount);
+                                    dispatcher.deposit(account, amount);
                                 }
                                 case "withdraw" -> {
                                     System.out.print("// How much money would you like to withdraw: ");
                                     var amount = scanner.nextLine();
-                                    service.withdraw(account, amount);
+                                    dispatcher.withdraw(account, amount);
                                 }
-                                case "info" -> System.out.println(service.getAccountInfo(account));
-                                case "history" -> System.out.println(service.getTransactionHistory(account));
-                                case "exit" -> service.addLog(account.getUsername() + " exited his account");
+                                case "info" -> System.out.println(dispatcher.getAccountInfo(account));
+                                case "history" -> System.out.println(dispatcher.getTransactionHistory(account));
+                                case "exit" -> dispatcher.addLog(account.getUsername() + " exited his account");
                                 case "help" -> {
                                     System.out.println(instruction);
-                                    service.addLog(account.getUsername() + " requested help menu");
+                                    dispatcher.addLog(account.getUsername() + " requested help menu");
                                 }
                                 default -> System.out.println("!!! Incorrect command");
                             }
@@ -106,12 +104,14 @@ public class Application {
                 }
                 case "exit" -> {
                     program = "end";
-                    service.addLog("Program exited");
+                    dispatcher.addLog("Program exited");
                 }
                 default -> System.out.println("!!! Incorrect command");
             }
         }
         System.out.println("Logs:");
-        service.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
+        dispatcher.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
     }
+
+
 }

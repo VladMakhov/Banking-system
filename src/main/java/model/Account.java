@@ -1,10 +1,6 @@
-package api.model;
+package model;
 
 import java.util.List;
-
-/*
-* Blueprint of a Player that regulates through the Wallet Service
-*  */
 
 
 public class Account {

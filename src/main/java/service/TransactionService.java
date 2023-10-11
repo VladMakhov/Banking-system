@@ -1,8 +1,8 @@
-package api.service;
+package service;
 
-import api.model.Account;
-import api.model.Transaction;
-import api.model.TransactionType;
+import model.Account;
+import model.Transaction;
+import model.TransactionType;
 
 import java.util.stream.Collectors;
 
@@ -21,8 +21,7 @@ public class TransactionService {
     }
 
     /*
-     * Method accepts Existing account and amount of money along with type of transaction
-     * and creates and returns new transaction
+     * Method and creates new transaction and adding it to transaction list of account
      * */
     public void createTransaction(long amount, String username, TransactionType type) {
         Transaction transaction = new Transaction(TRANSACTION_ID++, username, amount, type);

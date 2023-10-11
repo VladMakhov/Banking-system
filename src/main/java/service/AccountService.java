@@ -1,15 +1,15 @@
-package api.service;
+package service;
 
-import api.exception.AccountExistException;
-import api.exception.AccountNotFoundException;
-import api.model.Account;
+import exception.AccountExistException;
+import exception.AccountNotFoundException;
+import model.Account;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /*
-* Service that provides functionality to create Account with unique ID, his own balance and List of transactions.
+* Service that provides functionality to create and manage accounts.
 * */
 public class AccountService {
 
@@ -17,7 +17,7 @@ public class AccountService {
     private static final Map<String, Account> accounts = new HashMap<>();
 
     /*
-     * Method accepts username and password to create and return new account
+     * Method accepts username and password to create new account and saves it to storage
      * */
     public void createAccount(String username, String password) {
         if (!accounts.containsKey(username)) {
@@ -25,10 +25,6 @@ public class AccountService {
         } else {
             throw new AccountExistException("Account with name: " + username + " already exist");
         }
-    }
-
-    private static void addAccountToStorage(Account account) {
-        accounts.put(account.getUsername(), account);
     }
 
     public Account getAccountByName(String username) {
@@ -44,4 +40,9 @@ public class AccountService {
                 "\nName: " + account.getUsername() +
                 "\nBalance: " + account.getBalance();
     }
+
+    private static void addAccountToStorage(Account account) {
+        accounts.put(account.getUsername(), account);
+    }
+
 }

@@ -1,22 +1,22 @@
-package api.service;
+package service;
 
-import api.model.Account;
-import api.model.TransactionType;
+import model.Account;
+import model.TransactionType;
 
 /*
 * Service that gives ability to manipulate with account balance
 * by making transactions such as deposit (add money) and withdrawal (take money)
 * */
-public class WalletService {
+public class FinanceService {
 
     private final TransactionService transactionService;
 
-    public WalletService() {
+    public FinanceService() {
         this.transactionService = new TransactionService();
     }
 
     /*
-    * Method that accepts account and amount of money and withdraw money from Account if he got enough
+    * Method that accepts account and amount of money to withdraw money from Account if he got enough
     * */
     public void withdraw(Account account, long amount) {
         if (account.getBalance() - amount < 0) {
@@ -29,7 +29,7 @@ public class WalletService {
     }
 
     /*
-    * Method that accepts account and amount of money to deposit and add amount to account
+    * Method that accepts account and amount of money to deposit into account
     * */
     public void deposit(Account account, long amount) {
         if (amount <= 0) {

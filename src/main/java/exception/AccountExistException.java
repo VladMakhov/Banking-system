@@ -1,4 +1,4 @@
-package api.exception;
+package exception;
 
 public class AccountExistException extends RuntimeException {
     public AccountExistException(String message) {

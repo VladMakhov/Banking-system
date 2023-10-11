@@ -1,29 +1,30 @@
-package api.facade;
+package dispatcher;
 
-import api.exception.AccountExistException;
-import api.exception.AccountNotFoundException;
-import api.model.Account;
-import api.service.AccountService;
-import api.service.LogService;
-import api.service.TransactionService;
-import api.service.WalletService;
+import exception.AccountExistException;
+import exception.AccountNotFoundException;
+import model.Account;
+import service.AccountService;
+import service.LogService;
+import service.TransactionService;
+import service.FinanceService;
 
 import java.util.List;
 import java.util.Objects;
 
 
 /*
-* Main facade class that connects all services into one and provides logging
+* Implementation of dispatcher interface.
+* Facade class that connects all services into one, provides logging and exception handling
 * */
-public class BankFacadeImpl implements BankFacade {
+public class DispatcherImpl implements Dispatcher {
 
-    private final WalletService walletService;
+    private final FinanceService financeService;
     private final AccountService accountService;
     private final LogService logService;
     private final TransactionService transactionService;
 
-    public BankFacadeImpl() {
-        this.walletService = new WalletService();
+    public DispatcherImpl() {
+        this.financeService = new FinanceService();
         this.accountService = new AccountService();
         this.transactionService = new TransactionService();
         this.logService = new LogService();
@@ -53,7 +54,7 @@ public class BankFacadeImpl implements BankFacade {
     public void deposit(Account account, String unparsed) {
         try {
             long amount = Integer.parseInt(unparsed);
-            walletService.deposit(account, amount);
+            financeService.deposit(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made deposit transaction on " + amount);
         } catch (NumberFormatException e) {
@@ -69,7 +70,7 @@ public class BankFacadeImpl implements BankFacade {
     public void withdraw(Account account, String unparsed) {
         try {
             long amount = Integer.parseInt(unparsed);
-            walletService.withdraw(account, amount);
+            financeService.withdraw(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made withdrawing transaction on " + amount);
         } catch (NumberFormatException e) {
