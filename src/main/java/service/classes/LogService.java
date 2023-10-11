@@ -1,11 +1,11 @@
-package service;
+package service.classes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /*
-* Basically, custom log4j2
+* Basically, custom log storage
 * */
 public class LogService {
 

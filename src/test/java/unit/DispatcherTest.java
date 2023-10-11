@@ -4,10 +4,7 @@ package unit;
 import dispatcher.Dispatcher;
 import dispatcher.DispatcherImpl;
 import model.Account;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 
 import java.util.ArrayList;
@@ -31,14 +28,18 @@ public class DispatcherTest {
     }
 
     @Test
+    @DisplayName("Creating empty account")
     public void createAccount_returns_valid_empty_account() {
-        Assertions.assertEquals("test", account.getUsername());
-        Assertions.assertEquals("test", account.getPassword());
-        Assertions.assertEquals(0, account.getBalance());
-        Assertions.assertEquals(new ArrayList<>(), account.getTransactions());
+        dispatcher.createAccount("account", "password");
+        Account a = dispatcher.validateAccount("account", "password");
+        Assertions.assertEquals("account", a.getUsername());
+        Assertions.assertEquals("password", a.getPassword());
+        Assertions.assertEquals(0, a.getBalance());
+        Assertions.assertEquals(new ArrayList<>(), a.getTransactions());
     }
 
     @Test
+    @DisplayName("Making valid deposit")
     public void deposit_returns_balance() {
         Assertions.assertEquals(0, account.getBalance());
         dispatcher.deposit(account, "1000");
@@ -46,6 +47,7 @@ public class DispatcherTest {
     }
 
     @Test
+    @DisplayName("Making invalid deposit - returns exception")
     public void deposit_throws_exception() {
         Assertions.assertEquals(0, account.getBalance());
         dispatcher.deposit(account, "-1");
@@ -53,6 +55,7 @@ public class DispatcherTest {
     }
 
     @Test
+    @DisplayName("Making valid withdrawal")
     public void withdrawal_returns_balance() {
         Assertions.assertEquals(0, account.getBalance());
         dispatcher.deposit(account, "1000");
@@ -61,6 +64,7 @@ public class DispatcherTest {
     }
 
     @Test
+    @DisplayName("Making valid withdrawal - returns exception")
     public void withdrawal_throws_exception() {
         Assertions.assertEquals(0, account.getBalance());
         dispatcher.deposit(account, "1000");

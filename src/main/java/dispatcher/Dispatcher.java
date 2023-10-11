@@ -10,26 +10,26 @@ import java.util.List;
 * */
 public interface Dispatcher {
     /*
-    * Methods that manages finances
+    * Manage finances
     * */
     void deposit(Account account, String amount);
     void withdraw(Account account, String amount);
 
     /*
-    * Methods that manages account life cycle
+    * Manage account life cycle
     * */
-    void createAccount(String username, String password);
+    boolean createAccount(String username, String password);
     Account validateAccount(String username, String password);
     String getAccountInfo(Account account);
 
     /*
-    * Methods that manages logging
+    * Manage logging
     * */
     void addLog(String message);
     List<String> getLogs();
 
     /*
-    * Methods that manages transactions
+    * Manage transactions
     * */
     String getTransactionHistory(Account account);
 

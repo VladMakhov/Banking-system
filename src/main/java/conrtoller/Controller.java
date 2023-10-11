@@ -15,30 +15,26 @@ import java.util.Scanner;
 public class Controller {
     public static void main(String[] args) {
         Dispatcher dispatcher = new DispatcherImpl();
+        Account account;
 
         Scanner scanner = new Scanner(System.in);
 
-        Account account;
         String welcome = """
-                 _________________________________________________________________________
-                | Good day, sir!                                                          |
-                | This is bank of Ylab University.                                        |
-                | To proceed you need to either register Account or Log in to existing.   |
-                |_________________________________________________________________________|
+                Good day, sir!
+                This is bank of Ylab University.
+                To proceed you need to either register Account or Log in to existing.
                 """;
         String instruction = """
-                 _________________________________________________
-                | Instruction:                                    |
-                | To check info type 'info'                       |
-                | To deposit money type 'deposit'                 |
-                | To withdraw money type 'withdraw'               |
-                | To see your transaction history type 'history'  |
-                | To see instruction type 'help'                  |
-                | To log out type 'exit'                          |
-                |_________________________________________________|
+                Instruction:
+                To check info type 'info'
+                To deposit money type 'deposit'
+                To withdraw money type 'withdraw'
+                To see your transaction history type 'history'
+                To see instruction type 'help'
+                To log out type 'exit'
                 """;
 
-        System.out.print(welcome);
+        System.out.println("\n" + welcome);
         var program = "start";
 
         /*
@@ -50,28 +46,29 @@ public class Controller {
          * */
         while (!program.equals("end")) {
             System.out.println("""
-                    // Type 'register' to create new Account or 'login' to connect to existing one?""");
+                    Sign up or Sign in?""");
             System.out.print(">> ");
             var in = scanner.nextLine().toLowerCase();
 
             switch (in) {
-                case "register" -> {
-                    System.out.print("Username: ");
+                case "register", "sign up", "signup" -> {
+                    System.out.print("Enter name: ");
                     var username = scanner.nextLine();
-                    System.out.print("Password: ");
+                    System.out.print("Enter password: ");
                     var password = scanner.nextLine();
-                    dispatcher.createAccount(username, password);
+                    boolean isCreated = dispatcher.createAccount(username, password);
+                    if (isCreated) System.out.println("Account registered successfully");
                 }
-                case "login" -> {
-                    System.out.print("Username: ");
+                case "login", "sign in", "signin" -> {
+                    System.out.print("Enter name: ");
                     var username = scanner.nextLine();
-                    System.out.print("Password: ");
+                    System.out.print("Enter password: ");
                     var password = scanner.nextLine();
 
                     account = dispatcher.validateAccount(username, password);
 
                     if (account != null) {
-                        System.out.println("// Welcome, " + account.getUsername() + "!\n" + instruction);
+                        System.out.println("\nWelcome, " + account.getUsername() + "!\n\n" + instruction);
                         var input = "start";
 
                         while (!input.equals("exit")) {
@@ -80,33 +77,33 @@ public class Controller {
 
                             switch (input) {
                                 case "deposit" -> {
-                                    System.out.print("// How much money would you like to deposit: ");
+                                    System.out.print("How much money would you like to deposit: ");
                                     var amount = scanner.nextLine();
                                     dispatcher.deposit(account, amount);
                                 }
                                 case "withdraw" -> {
-                                    System.out.print("// How much money would you like to withdraw: ");
+                                    System.out.print("How much money would you like to withdraw: ");
                                     var amount = scanner.nextLine();
                                     dispatcher.withdraw(account, amount);
                                 }
                                 case "info" -> System.out.println(dispatcher.getAccountInfo(account));
                                 case "history" -> System.out.println(dispatcher.getTransactionHistory(account));
-                                case "exit" -> dispatcher.addLog(account.getUsername() + " exited his account");
+                                case "exit" -> {
+                                    dispatcher.addLog(account.getUsername() + " exited his account");
+                                    System.out.println("Bye");
+                                }
                                 case "help" -> {
-                                    System.out.println(instruction);
+                                    System.out.println("\n" + instruction);
                                     dispatcher.addLog(account.getUsername() + " requested help menu");
                                 }
-                                default -> System.out.println("!!! Incorrect command");
+                                default -> System.out.println("ERROR: Incorrect command");
                             }
                         }
                     }
 
                 }
-                case "exit" -> {
-                    program = "end";
-                    dispatcher.addLog("Program exited");
-                }
-                default -> System.out.println("!!! Incorrect command");
+                case "exit" -> program = "end";
+                default -> System.out.println("ERROR: Incorrect command");
             }
         }
         System.out.println("Logs:");
