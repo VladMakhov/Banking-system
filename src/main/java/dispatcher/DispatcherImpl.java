@@ -14,7 +14,7 @@ import java.util.List;
 
 /*
 * Implementation of dispatcher interface.
-* Facade class that connects all services into one, provides logging and exception handling
+* Facade class that connects all services into one.
 * */
 public class DispatcherImpl implements Dispatcher {
 
@@ -43,7 +43,6 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public void createAccount(String username, String password) {
         accountService.createAccount(username, password);
-
     }
 
     @Override

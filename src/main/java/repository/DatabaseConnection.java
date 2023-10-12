@@ -1,5 +1,8 @@
 package repository;
 
+/*
+* Information about database
+* */
 public interface DatabaseConnection {
     String NAME = "root";
     String PASSWORD = "root";

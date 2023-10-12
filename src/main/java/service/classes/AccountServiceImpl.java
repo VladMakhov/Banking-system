@@ -5,13 +5,10 @@ import repository.AccountRepository;
 import repository.dao.AccountDao;
 import service.AccountService;
 
-/*
- * Service that provides functionality to create and manage accounts.
- * */
+
 public class AccountServiceImpl implements AccountService {
 
     private static int ACCOUNT_ID = 1;
-
 
     private final AccountRepository repository;
     private final LogService logService;
@@ -21,9 +18,6 @@ public class AccountServiceImpl implements AccountService {
         this.logService = new LogService();
     }
 
-    /*
-     * Method accepts username and password to create new account and saves it to storage
-     * */
     @Override
     public void createAccount(String username, String password) {
         try {

@@ -10,9 +10,6 @@ import service.TransactionService;
 import java.util.stream.Collectors;
 
 
-/*
-* Service manages transactions lifecycle
-* */
 public class TransactionServiceImpl implements TransactionService {
 
     private static int TRANSACTION_ID = 1;
@@ -25,19 +22,12 @@ public class TransactionServiceImpl implements TransactionService {
         this.logService = new LogService();
     }
 
-    /*
-     * Method and creates new transaction and adding it to transaction list of account
-     * */
     @Override
     public void saveTransaction(int amount, int accountId, TransactionType type) {
         Transaction transaction = new Transaction(TRANSACTION_ID++, accountId, amount, type);
         repository.saveTransaction(transaction);
     }
 
-
-    /*
-     * Method that create a formatted result of account transaction history
-     * */
     @Override
     public String getTransactionHistory(Account account) {
         var transactions = repository.getAccountHistory(account);
