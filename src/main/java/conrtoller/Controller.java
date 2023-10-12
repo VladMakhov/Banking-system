@@ -66,7 +66,7 @@ public class Controller {
                     account = dispatcher.validateAccount(username, password);
 
                     if (account != null) {
-                        System.out.println("Welcome, " + account.getUsername() + "!\n" + instruction);
+                        System.out.println("INFO: Welcome, " + account.getUsername() + "!\n" + instruction);
                         var input = "start";
 
                         while (!input.equals("exit")) {
@@ -75,20 +75,20 @@ public class Controller {
 
                             switch (input) {
                                 case "deposit" -> {
-                                    System.out.print("How much money would you like to deposit: ");
+                                    System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
                                     dispatcher.deposit(account, amount);
                                 }
                                 case "withdraw" -> {
-                                    System.out.print("How much money would you like to withdraw: ");
+                                    System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
                                     dispatcher.withdraw(account, amount);
                                 }
                                 case "info" -> System.out.println(dispatcher.getAccountInfo(account));
                                 case "history" -> System.out.println(dispatcher.getTransactionHistory(account));
                                 case "exit" -> {
-                                    dispatcher.addLog(account.getUsername() + " exited his account");
-                                    System.out.println("Bye");
+                                    dispatcher.addLog(account.getUsername() + " exited account");
+                                    System.out.println("INFO: Bye");
                                 }
                                 case "help" -> {
                                     System.out.println("\n" + instruction);

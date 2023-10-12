@@ -21,4 +21,11 @@ public interface AccountService {
     * Get info about account
     * */
     String getAccountInfo(Account account);
+
+    /*
+     * Method that create a formatted result of account transaction history
+     * */
+    String getTransactionHistory(Account account);
+
+
 }

@@ -21,16 +21,12 @@ public interface Dispatcher {
     void createAccount(String username, String password);
     Account validateAccount(String username, String password);
     String getAccountInfo(Account account);
+    String getTransactionHistory(Account account);
 
     /*
     * Manage logging (Log Service)
     * */
     void addLog(String message);
     List<String> getLogs();
-
-    /*
-    * Manage transactions (Transaction Service)
-    * */
-    String getTransactionHistory(Account account);
 
 }

@@ -3,11 +3,9 @@ package dispatcher;
 import model.Account;
 import service.AccountService;
 import service.FinanceService;
-import service.TransactionService;
 import service.classes.AccountServiceImpl;
 import service.classes.FinanceServiceImpl;
-import service.classes.LogService;
-import service.classes.TransactionServiceImpl;
+import util.LogService;
 
 import java.util.List;
 
@@ -21,12 +19,10 @@ public class DispatcherImpl implements Dispatcher {
     private final FinanceService financeService;
     private final AccountService accountService;
     private final LogService logService;
-    private final TransactionService transactionService;
 
     public DispatcherImpl() {
         this.financeService = new FinanceServiceImpl();
         this.accountService = new AccountServiceImpl();
-        this.transactionService = new TransactionServiceImpl();
         this.logService = new LogService();
     }
 
@@ -67,7 +63,7 @@ public class DispatcherImpl implements Dispatcher {
 
     @Override
     public String getTransactionHistory(Account account) {
-        return transactionService.getTransactionHistory(account);
+        return accountService.getTransactionHistory(account);
     }
 
 }

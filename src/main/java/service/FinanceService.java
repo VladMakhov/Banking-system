@@ -17,4 +17,5 @@ public interface FinanceService {
      * Method that accepts account and amount of money to withdraw money from Account if he got enough
      * */
     void withdraw(Account account, String amount);
+
 }
