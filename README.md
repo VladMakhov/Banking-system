@@ -1,10 +1,14 @@
 # Ylab banking system (Java core + Collections)
-Version: Java 17
+####  Technologies: Java 17, JUnit, Mysql
 
-To start project you need to run java/ApplicationStarter.class 
+### To start project you need to:
+1) Change name, password and url in util/DatabaseConnection.java (If not mysql - add db dependency)
+2) Run resources/data.sql
+3) Run java/ApplicationStarter.class 
+
 ### Registration and Account management:
-![img.png](img.png)
+![Account management.png](Account%20management.png)
 ### Exception handling
-![img_1.png](img_1.png)
+![Exceptions.png](Exceptions.png)
 ### Logs
-![img_2.png](img_2.png)
+![Logs.png](Logs.png)

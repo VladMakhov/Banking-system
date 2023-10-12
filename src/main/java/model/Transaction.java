@@ -4,7 +4,7 @@ package model;
 public class Transaction {
     private final int transactionId;
     private int accountId;
-    private int amount;
+    private final int amount;
     private final TransactionType type;
 
     public Transaction(int transactionId, int accountId, int amount, TransactionType type) {
@@ -30,10 +30,6 @@ public class Transaction {
 
     public int getAmount() {
         return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     public TransactionType getType() {

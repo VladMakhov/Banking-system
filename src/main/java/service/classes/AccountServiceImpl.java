@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
                 """);
 
         String body = transactions.stream()
-                .map(tr -> String.format("%s   %s    %s", tr.getTransactionId(), tr.getAmount(), tr.getType()))
+                .map(tr -> String.format("%s    %s    %s", tr.getTransactionId(), tr.getAmount(), tr.getType()))
                 .collect(Collectors.joining("\n"));
 
         return formattedResult.append(body).toString();
