@@ -18,7 +18,7 @@ public interface Dispatcher {
     /*
     * Manage account life cycle (Account Service)
     * */
-    boolean createAccount(String username, String password);
+    void createAccount(String username, String password);
     Account validateAccount(String username, String password);
     String getAccountInfo(Account account);
 

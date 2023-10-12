@@ -4,6 +4,6 @@ import model.Account;
 import model.TransactionType;
 
 public interface TransactionService {
-    void createTransaction(long amount, String username, TransactionType type);
+    void saveTransaction(int amount, int accountId, TransactionType type);
     String getTransactionHistory(Account account);
 }

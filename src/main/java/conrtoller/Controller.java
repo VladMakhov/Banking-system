@@ -55,8 +55,7 @@ public class Controller {
                     var username = scanner.nextLine().strip();
                     System.out.print("Enter password: ");
                     var password = scanner.nextLine().strip();
-                    boolean isCreated = dispatcher.createAccount(username, password);
-                    if (isCreated) System.out.println("Account registered successfully");
+                    dispatcher.createAccount(username, password);
                 }
                 case "login", "sign in", "signin" -> {
                     System.out.print("Enter name: ");

@@ -1,13 +1,10 @@
 package service.classes;
 
+import dao.DAO;
 import exception.AccountExistException;
 import exception.AccountNotFoundException;
 import model.Account;
 import service.AccountService;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /*
  * Service that provides functionality to create and manage accounts.
@@ -15,24 +12,35 @@ import java.util.Map;
 public class AccountServiceImpl implements AccountService {
 
     private static int ACCOUNT_ID = 1;
-    private static final Map<String, Account> accounts = new HashMap<>();
+
+
+    private final DAO dao;
+
+    public AccountServiceImpl() {
+        this.dao = new DAO();
+    }
 
     /*
      * Method accepts username and password to create new account and saves it to storage
      * */
     @Override
     public void createAccount(String username, String password) {
-        if (!accounts.containsKey(username)) {
-            addAccountToStorage(new Account(ACCOUNT_ID++, username, password, 0, new ArrayList<>()));
+        if (dao.findAccountByName(username) == null) {
+            dao.saveAccount(new Account(ACCOUNT_ID++, username, password, 0));
         } else {
-            throw new AccountExistException("Account with name: " + username + " already exist");
+            throw new AccountExistException("Account with name: " + username + " already exists");
         }
     }
 
     @Override
-    public Account getAccountByName(String username) {
-        if (accounts.containsKey(username)) {
-            return accounts.get(username);
+    public Account validateAccount(String username, String password) {
+        Account account = dao.findAccountByName(username);
+        if (account.getUsername().equals(username)) {
+            if (account.getPassword().equals(password)) {
+                return account;
+            } else {
+                throw new IllegalArgumentException("Wrong password");
+            }
         } else {
             throw new AccountNotFoundException("Account with name: " + username + " not found");
         }
@@ -44,9 +52,4 @@ public class AccountServiceImpl implements AccountService {
                 "\nName: " + account.getUsername() +
                 "\nBalance: " + account.getBalance();
     }
-
-    private static void addAccountToStorage(Account account) {
-        accounts.put(account.getUsername(), account);
-    }
-
 }

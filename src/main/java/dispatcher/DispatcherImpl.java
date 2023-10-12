@@ -12,6 +12,7 @@ import service.classes.FinanceServiceImpl;
 import service.classes.LogService;
 import service.classes.TransactionServiceImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,16 +46,15 @@ public class DispatcherImpl implements Dispatcher {
     }
 
     @Override
-    public boolean createAccount(String username, String password) {
+    public void createAccount(String username, String password) {
         try {
             accountService.createAccount(username, password);
             addLog("Account created with name: " + username);
-            return true;
-        } catch (AccountExistException e) {
+            System.out.println("Account registered successfully");
+        } catch (AccountExistException | SQLException e) {
             addLog(e.getMessage());
             System.out.println("ERROR: " + e.getMessage());
         }
-        return false;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public Account validateAccount(String username, String password) {
         try {
-            Account account = accountService.getAccountByName(username);
+            Account account = accountService.validateAccount(username, password);
             if (Objects.equals(account.getPassword(), password)) {
                 addLog(username + " has entered his account");
                 return account;
@@ -76,6 +76,8 @@ public class DispatcherImpl implements Dispatcher {
         } catch (AccountNotFoundException e) {
             addLog(String.format("%s: %s", username, e.getMessage()));
             System.out.println("ERROR: Account does not exist");
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
         }
         return null;
     }
@@ -83,7 +85,7 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public void deposit(Account account, String unparsed) {
         try {
-            long amount = Integer.parseInt(unparsed);
+            int amount = Integer.parseInt(unparsed);
             financeService.deposit(account, amount);
             System.out.println("Balance: " + account.getBalance());
             addLog(account.getUsername() + " made deposit transaction on " + amount);
@@ -96,7 +98,7 @@ public class DispatcherImpl implements Dispatcher {
     @Override
     public void withdraw(Account account, String unparsed) {
         try {
-            long amount = Integer.parseInt(unparsed);
+            int amount = Integer.parseInt(unparsed);
             financeService.withdraw(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made withdrawing transaction on " + amount);
