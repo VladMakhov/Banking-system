@@ -1,9 +1,10 @@
 package service.classes;
 
-import dao.DAO;
 import exception.AccountExistException;
 import exception.AccountNotFoundException;
 import model.Account;
+import repository.AccountRepository;
+import repository.dao.AccountDao;
 import service.AccountService;
 
 /*
@@ -14,10 +15,10 @@ public class AccountServiceImpl implements AccountService {
     private static int ACCOUNT_ID = 1;
 
 
-    private final DAO dao;
+    private final AccountRepository repository;
 
     public AccountServiceImpl() {
-        this.dao = new DAO();
+        this.repository = new AccountDao();
     }
 
     /*
@@ -25,8 +26,8 @@ public class AccountServiceImpl implements AccountService {
      * */
     @Override
     public void createAccount(String username, String password) {
-        if (dao.findAccountByName(username) == null) {
-            dao.saveAccount(new Account(ACCOUNT_ID++, username, password, 0));
+        if (repository.findAccountByUsername(username) == null) {
+            repository.save(new Account(ACCOUNT_ID++, username, password, 0));
         } else {
             throw new AccountExistException("Account with name: " + username + " already exists");
         }
@@ -34,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account validateAccount(String username, String password) {
-        Account account = dao.findAccountByName(username);
+        Account account = repository.findAccountByUsername(username);
         if (account.getUsername().equals(username)) {
             if (account.getPassword().equals(password)) {
                 return account;

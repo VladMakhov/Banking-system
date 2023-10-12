@@ -1,9 +1,10 @@
 package service.classes;
 
-import dao.DAO;
 import exception.NegativeNumberArgumentException;
 import model.Account;
 import model.TransactionType;
+import repository.FinanceRepository;
+import repository.dao.FinanceDao;
 import service.FinanceService;
 import service.TransactionService;
 
@@ -14,11 +15,11 @@ import service.TransactionService;
 public class FinanceServiceImpl implements FinanceService {
 
     private final TransactionService transactionService;
-    private final DAO dao;
+    private final FinanceRepository repository;
 
     public FinanceServiceImpl() {
         this.transactionService = new TransactionServiceImpl();
-        this.dao = new DAO();
+        this.repository = new FinanceDao();
     }
 
     /*
@@ -28,7 +29,7 @@ public class FinanceServiceImpl implements FinanceService {
     public void withdraw(Account account, int amount) {
         if (amount > 0) {
             if (account.getBalance() - amount >= 0) {
-                dao.executeWithdraw(account, amount);
+                repository.withdraw(account, amount);
                 account.setBalance(account.getBalance() - amount);
                 transactionService.saveTransaction(amount, account.getId(), TransactionType.WITHDRAWAL);
             } else {
@@ -46,7 +47,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public void deposit(Account account, int amount) {
         if (amount > 0) {
-            dao.executeDeposit(account, amount);
+            repository.deposit(account, amount);
             account.setBalance(account.getBalance() + amount);
             transactionService.saveTransaction(amount, account.getId(), TransactionType.DEPOSIT);
         } else {

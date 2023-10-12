@@ -29,7 +29,6 @@ create table if not exists transactions
 
 delete from transaction_type where id > 0;
 delete from accounts where id > 0;
-
 insert into transaction_type (id, type)
 values (1, 'DEPOSIT'), (2, 'WITHDRAWAL');
 set foreign_key_checks = 1;

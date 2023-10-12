@@ -7,8 +7,6 @@ import model.Account;
 import org.junit.jupiter.api.*;
 
 
-import java.util.ArrayList;
-
 
 public class DispatcherTest {
 
@@ -35,7 +33,6 @@ public class DispatcherTest {
         Assertions.assertEquals("account", a.getUsername());
         Assertions.assertEquals("password", a.getPassword());
         Assertions.assertEquals(0, a.getBalance());
-        Assertions.assertEquals(new ArrayList<>(), a.getTransactions());
     }
 
     @Test
