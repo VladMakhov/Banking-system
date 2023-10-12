@@ -1,15 +1,15 @@
-package repository.dao;
+package dao.classes;
 
 import model.Account;
 import model.Transaction;
 import model.TransactionType;
-import repository.AccountRepository;
+import dao.AccountDao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountDao implements AccountRepository {
+public class AccountDaoImpl implements AccountDao {
 
     @Override
     public void save(Account account) {

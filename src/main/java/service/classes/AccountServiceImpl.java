@@ -1,8 +1,8 @@
 package service.classes;
 
 import model.Account;
-import repository.AccountRepository;
-import repository.dao.AccountDao;
+import dao.AccountDao;
+import dao.classes.AccountDaoImpl;
 import service.AccountService;
 import util.LogService;
 
@@ -13,19 +13,19 @@ public class AccountServiceImpl implements AccountService {
 
     private static int ACCOUNT_ID = 1;
 
-    private final AccountRepository accountRepository;
+    private final AccountDao accountDao;
     private final LogService logService;
 
     public AccountServiceImpl() {
-        this.accountRepository = new AccountDao();
+        this.accountDao = new AccountDaoImpl();
         this.logService = new LogService();
     }
 
     @Override
     public void createAccount(String username, String password) {
         try {
-            if (accountRepository.findAccountByUsername(username) == null) {
-                accountRepository.save(new Account(ACCOUNT_ID++, username, password, 0));
+            if (accountDao.findAccountByUsername(username) == null) {
+                accountDao.save(new Account(ACCOUNT_ID++, username, password, 0));
                 logService.addLog("Account created with name: " + username);
                 System.out.println("INFO: Account registered successfully");
             } else {
@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account validateAccount(String username, String password) {
         try {
-            Account account = accountRepository.findAccountByUsername(username);
+            Account account = accountDao.findAccountByUsername(username);
             if (account.getUsername().equals(username)) {
                 if (account.getPassword().equals(password)) {
                     return account;
@@ -58,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String getTransactionHistory(Account account) {
-        var transactions = accountRepository.getAccountHistory(account);
+        var transactions = accountDao.getAccountHistory(account);
         logService.addLog(account.getUsername() + " requested transaction history");
         StringBuilder formattedResult = new StringBuilder();
         formattedResult.append("""

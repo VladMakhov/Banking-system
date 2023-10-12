@@ -1,4 +1,4 @@
-package repository;
+package dao;
 
 import model.Account;
 import model.Transaction;
@@ -8,7 +8,7 @@ import util.DatabaseConnection;
 /*
  * Data access interface that manages finance life cycle
  * */
-public interface FinanceRepository extends DatabaseConnection {
+public interface FinanceDao extends DatabaseConnection {
     /*
     * Method adding validated amount to account
     * */

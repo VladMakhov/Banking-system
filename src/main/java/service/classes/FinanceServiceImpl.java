@@ -3,8 +3,8 @@ package service.classes;
 import model.Account;
 import model.Transaction;
 import model.TransactionType;
-import repository.FinanceRepository;
-import repository.dao.FinanceDao;
+import dao.FinanceDao;
+import dao.classes.FinanceDaoImpl;
 import service.FinanceService;
 import util.LogService;
 
@@ -13,11 +13,11 @@ public class FinanceServiceImpl implements FinanceService {
 
     private static int TRANSACTION_ID = 1;
 
-    private final FinanceRepository repository;
+    private final FinanceDao financeDao;
     private final LogService logService;
 
     public FinanceServiceImpl() {
-        this.repository = new FinanceDao();
+        this.financeDao = new FinanceDaoImpl();
         this.logService = new LogService();
     }
 
@@ -28,7 +28,7 @@ public class FinanceServiceImpl implements FinanceService {
             if (amount > 0) {
                 if (account.getBalance() - amount >= 0) {
 
-                    repository.withdraw(account, amount);
+                    financeDao.withdraw(account, amount);
                     account.setBalance(account.getBalance() - amount);
                     saveTransaction(amount, account.getId(), TransactionType.WITHDRAWAL);
 
@@ -52,7 +52,7 @@ public class FinanceServiceImpl implements FinanceService {
             int amount = Integer.parseInt(unparsedAmount);
             if (amount > 0) {
 
-                repository.deposit(account, amount);
+                financeDao.deposit(account, amount);
                 account.setBalance(account.getBalance() + amount);
                 saveTransaction(amount, account.getId(), TransactionType.DEPOSIT);
 
@@ -69,7 +69,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     private void saveTransaction(int amount, int accountId, TransactionType type) {
         Transaction transaction = new Transaction(TRANSACTION_ID++, accountId, amount, type);
-        repository.save(transaction);
+        financeDao.save(transaction);
     }
 
 }

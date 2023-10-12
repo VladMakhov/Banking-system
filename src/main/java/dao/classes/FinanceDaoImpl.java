@@ -1,13 +1,13 @@
-package repository.dao;
+package dao.classes;
 
 import model.Account;
 import model.Transaction;
-import repository.FinanceRepository;
+import dao.FinanceDao;
 
 import java.sql.*;
 
 
-public class FinanceDao implements FinanceRepository {
+public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void deposit(Account account, long amount) {

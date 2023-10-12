@@ -1,4 +1,4 @@
-package repository;
+package dao;
 
 import model.Account;
 import model.Transaction;
@@ -9,7 +9,7 @@ import java.util.List;
 /*
 * Data access interface that manages account life cycle
 * */
-public interface AccountRepository extends DatabaseConnection {
+public interface AccountDao extends DatabaseConnection {
     /*
     * Method accepts account to further map it to relational object and save it to database
     * */
