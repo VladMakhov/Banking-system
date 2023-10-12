@@ -47,22 +47,22 @@ public class Controller {
             System.out.println("""
                     Sign up or Sign in?""");
             System.out.print(">> ");
-            var in = scanner.nextLine().toLowerCase();
+            var in = scanner.nextLine().strip().toLowerCase().strip();
 
             switch (in) {
                 case "register", "sign up", "signup" -> {
                     System.out.print("Enter name: ");
-                    var username = scanner.nextLine();
+                    var username = scanner.nextLine().strip();
                     System.out.print("Enter password: ");
-                    var password = scanner.nextLine();
+                    var password = scanner.nextLine().strip();
                     boolean isCreated = dispatcher.createAccount(username, password);
                     if (isCreated) System.out.println("Account registered successfully");
                 }
                 case "login", "sign in", "signin" -> {
                     System.out.print("Enter name: ");
-                    var username = scanner.nextLine();
+                    var username = scanner.nextLine().strip();
                     System.out.print("Enter password: ");
-                    var password = scanner.nextLine();
+                    var password = scanner.nextLine().strip();
 
                     account = dispatcher.validateAccount(username, password);
 
@@ -72,17 +72,17 @@ public class Controller {
 
                         while (!input.equals("exit")) {
                             System.out.print(">> ");
-                            input = scanner.nextLine().toLowerCase();
+                            input = scanner.nextLine().strip().toLowerCase();
 
                             switch (input) {
                                 case "deposit" -> {
                                     System.out.print("How much money would you like to deposit: ");
-                                    var amount = scanner.nextLine();
+                                    var amount = scanner.nextLine().strip();
                                     dispatcher.deposit(account, amount);
                                 }
                                 case "withdraw" -> {
                                     System.out.print("How much money would you like to withdraw: ");
-                                    var amount = scanner.nextLine();
+                                    var amount = scanner.nextLine().strip();
                                     dispatcher.withdraw(account, amount);
                                 }
                                 case "info" -> System.out.println(dispatcher.getAccountInfo(account));

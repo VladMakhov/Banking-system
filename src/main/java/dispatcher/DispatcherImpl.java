@@ -2,6 +2,7 @@ package dispatcher;
 
 import exception.AccountExistException;
 import exception.AccountNotFoundException;
+import exception.NegativeNumberArgumentException;
 import model.Account;
 import service.AccountService;
 import service.FinanceService;
@@ -73,7 +74,7 @@ public class DispatcherImpl implements Dispatcher {
                 System.out.println("ERROR: Wrong password");
             }
         } catch (AccountNotFoundException e) {
-            addLog(e.getMessage());
+            addLog(String.format("%s: %s", username, e.getMessage()));
             System.out.println("ERROR: Account does not exist");
         }
         return null;
@@ -84,13 +85,10 @@ public class DispatcherImpl implements Dispatcher {
         try {
             long amount = Integer.parseInt(unparsed);
             financeService.deposit(account, amount);
-            System.out.println("balance: " + account.getBalance());
+            System.out.println("Balance: " + account.getBalance());
             addLog(account.getUsername() + " made deposit transaction on " + amount);
-        } catch (NumberFormatException e) {
-            System.out.println("ERROR: Incorrect value");
-            addLog(account.getUsername() + " failed deposit transaction");
-        } catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Can not add negative value");
+        } catch (NumberFormatException | NegativeNumberArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
             addLog(account.getUsername() + " failed deposit transaction");
         }
     }
@@ -102,11 +100,8 @@ public class DispatcherImpl implements Dispatcher {
             financeService.withdraw(account, amount);
             System.out.println("balance: " + account.getBalance());
             addLog(account.getUsername() + " made withdrawing transaction on " + amount);
-        } catch (NumberFormatException e) {
-            System.out.println("ERROR: Incorrect value");
-            addLog(account.getUsername() + " failed withdrawal transaction");
-        } catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Not enough money on the account");
+        } catch (NegativeNumberArgumentException | IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
             addLog(account.getUsername() + " failed withdrawal transaction");
         }
 

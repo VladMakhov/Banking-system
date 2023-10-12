@@ -1,5 +1,6 @@
 package service.classes;
 
+import exception.NegativeNumberArgumentException;
 import model.Account;
 import model.TransactionType;
 import service.FinanceService;
@@ -25,7 +26,7 @@ public class FinanceServiceImpl implements FinanceService {
         if (account.getBalance() - amount < 0) {
             throw new IllegalArgumentException("Not enough money on the account");
         } else if (amount <= 0) {
-            throw new NumberFormatException("Can not subtract negative value");
+            throw new NegativeNumberArgumentException("Can not subtract negative value");
         }
         account.setBalance(account.getBalance() - amount);
         transactionService.createTransaction(amount, account.getUsername(), TransactionType.WITHDRAWAL);
@@ -37,7 +38,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public void deposit(Account account, long amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Can not add negative value");
+            throw new NegativeNumberArgumentException("Can not add negative value");
         } else {
             account.setBalance(account.getBalance() + amount);
             transactionService.createTransaction(amount, account.getUsername(), TransactionType.DEPOSIT);
