@@ -2,10 +2,10 @@ package model;
 
 
 public class Transaction {
-    private int transactionId;
+    private final int transactionId;
     private int accountId;
     private int amount;
-    private TransactionType type;
+    private final TransactionType type;
 
     public Transaction(int transactionId, int accountId, int amount, TransactionType type) {
         this.transactionId = transactionId;
@@ -24,16 +24,8 @@ public class Transaction {
         return transactionId;
     }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
-    }
-
     public int getAccountId() {
         return accountId;
-    }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
     }
 
     public int getAmount() {
@@ -48,7 +40,4 @@ public class Transaction {
         return type;
     }
 
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
 }

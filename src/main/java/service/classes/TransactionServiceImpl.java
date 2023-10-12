@@ -5,7 +5,6 @@ import model.Transaction;
 import model.TransactionType;
 import repository.TransactionRepository;
 import repository.dao.TransactionDao;
-import service.AccountService;
 import service.TransactionService;
 
 import java.util.stream.Collectors;
@@ -18,12 +17,12 @@ public class TransactionServiceImpl implements TransactionService {
 
     private static int TRANSACTION_ID = 1;
 
-    private final AccountService accountService;
     private final TransactionRepository repository;
+    private final LogService logService;
 
     public TransactionServiceImpl() {
-        this.accountService = new AccountServiceImpl();
         this.repository = new TransactionDao();
+        this.logService = new LogService();
     }
 
     /*
@@ -42,7 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public String getTransactionHistory(Account account) {
         var transactions = repository.getAccountHistory(account);
-
+        logService.addLog(account.getUsername() + " requested transaction history");
         StringBuilder formattedResult = new StringBuilder();
         formattedResult.append("""
                 ID  Amount  Type

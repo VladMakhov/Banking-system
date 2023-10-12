@@ -19,7 +19,7 @@ public class FinanceDao implements FinanceRepository {
             preparedStatement.setInt(2, account.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -34,7 +34,7 @@ public class FinanceDao implements FinanceRepository {
             preparedStatement.setInt(2, account.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }

@@ -25,7 +25,7 @@ public class TransactionDao implements TransactionRepository {
             preparedStatement.setInt(4, transaction.getType().getTypeId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -47,8 +47,7 @@ public class TransactionDao implements TransactionRepository {
             }
             return list;
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

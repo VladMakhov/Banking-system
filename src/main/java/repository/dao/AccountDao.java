@@ -20,7 +20,7 @@ public class AccountDao implements AccountRepository {
             preparedStatement.setLong(4, 0);
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -42,7 +42,7 @@ public class AccountDao implements AccountRepository {
                         resultSet.getInt(4));
             }
         } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            throw new RuntimeException(e);
         }
         return null;
     }
