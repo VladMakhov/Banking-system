@@ -1,10 +1,7 @@
-package api.model;
+package model;
 
 import java.util.List;
-
-/*
-* Blueprint of a Player that regulates through the Wallet Service
-*  */
+import java.util.Objects;
 
 
 public class Account {
@@ -44,5 +41,18 @@ public class Account {
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id == account.id && balance == account.balance && Objects.equals(username, account.username) && Objects.equals(password, account.password) && Objects.equals(transactions, account.transactions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, balance, transactions);
     }
 }
