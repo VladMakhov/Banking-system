@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="003-create-table-transactions.xml" author="master">
+        <createTable tableName="transactions">
+            <column name="id" type="INT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="int"/>
+            <column name="amount" type="INT"/>
+            <column name="type" type="INT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="transactions"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_account_id"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"
+                                 />
+    </changeSet>
+</databaseChangeLog>

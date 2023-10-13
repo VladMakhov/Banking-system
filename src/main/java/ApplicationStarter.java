@@ -1,13 +1,13 @@
 import conrtoller.Controller;
-import util.FlywayMigration;
+import util.LiquibaseMigration;
 
 
 public class ApplicationStarter {
     public static void main(String[] args) {
-        FlywayMigration flywayMigration = new FlywayMigration();
+        LiquibaseMigration liquibaseMigration = new LiquibaseMigration();
         Controller controller = new Controller();
 
-        flywayMigration.flywayStarter();
+        liquibaseMigration.run();
         controller.start();
     }
 }

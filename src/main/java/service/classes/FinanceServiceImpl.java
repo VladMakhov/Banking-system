@@ -35,10 +35,10 @@ public class FinanceServiceImpl implements FinanceService {
                     System.out.println("INFO: balance: " + account.getBalance());
                     logService.addLog(account.getUsername() + " made withdrawing transaction on " + amount);
                 } else {
-                    throw new RuntimeException("ERROR: Not enough money on the account");
+                    throw new RuntimeException("Not enough money on the account");
                 }
             } else {
-                throw new RuntimeException("ERROR: Can not subtract negative value");
+                throw new RuntimeException("Can not subtract negative value");
             }
         } catch (RuntimeException e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -59,7 +59,7 @@ public class FinanceServiceImpl implements FinanceService {
                 System.out.println("INFO: balance: " + account.getBalance());
                 logService.addLog(account.getUsername() + " made deposit transaction on " + amount);
             } else {
-                throw new RuntimeException("ERROR: Can not add negative value");
+                throw new RuntimeException("Can not add negative value");
             }
         } catch (RuntimeException e) {
             System.out.println("ERROR: " + e.getMessage());

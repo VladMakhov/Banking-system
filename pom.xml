@@ -13,8 +13,9 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jupiter.version>5.10.0</jupiter.version>
-        <mysql.version>8.1.0</mysql.version>
+        <postgres.version>42.6.0</postgres.version>
         <flyway.version>9.21.0</flyway.version>
+        <liquibase.version>4.23.0</liquibase.version>
     </properties>
 
     <dependencies>
@@ -29,11 +30,15 @@
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
+            <version>${postgres.version}</version>
         </dependency>
     </dependencies>
 
