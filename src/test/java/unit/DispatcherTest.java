@@ -7,7 +7,6 @@ import model.Account;
 import org.junit.jupiter.api.*;
 
 
-
 public class DispatcherTest {
 
     static Dispatcher dispatcher = new DispatcherImpl();
@@ -17,19 +16,20 @@ public class DispatcherTest {
     @BeforeAll
     static void init() {
         dispatcher.createAccount("test", "test");
-        account = dispatcher.validateAccount("test", "test");
+        account = dispatcher.validateAccount("test", "test").orElseThrow();
     }
 
     @BeforeEach
     void eraseBalance() {
         account.setBalance(0);
+
     }
 
     @Test
     @DisplayName("Creating empty account")
     public void createAccount_returns_valid_empty_account() {
         dispatcher.createAccount("account", "password");
-        Account a = dispatcher.validateAccount("account", "password");
+        Account a = dispatcher.validateAccount("account", "password").orElseThrow();
         Assertions.assertEquals("account", a.getUsername());
         Assertions.assertEquals("password", a.getPassword());
         Assertions.assertEquals(0, a.getBalance());

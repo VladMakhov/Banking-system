@@ -3,7 +3,7 @@
 
 ### To start project you need to:
 1) Change name, password and url in util/DatabaseConnection.java (If not mysql - add db dependency)
-2) Run resources/data.sql
+2) Run resources/V5__Insert_Default_Transaction_types.sql
 3) Run java/ApplicationStarter.class 
 
 ### Registration and Account management:

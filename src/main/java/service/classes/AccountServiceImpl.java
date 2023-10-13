@@ -1,11 +1,12 @@
 package service.classes;
 
-import model.Account;
 import dao.AccountDao;
 import dao.classes.AccountDaoImpl;
+import model.Account;
 import service.AccountService;
 import util.LogService;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,12 +25,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void createAccount(String username, String password) {
         try {
-            if (accountDao.findAccountByUsername(username) == null) {
+            Optional<Account> account = accountDao.findAccountByUsername(username);
+            if (account.isEmpty()) {
                 accountDao.save(new Account(ACCOUNT_ID++, username, password, 0));
                 logService.addLog("Account created with name: " + username);
                 System.out.println("INFO: Account registered successfully");
             } else {
-                System.out.println("INFO: Account with name: " + username + " already exists");
+                throw new RuntimeException("Account with name: " + username + " already exists");
             }
         } catch (RuntimeException e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -38,22 +40,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account validateAccount(String username, String password) {
+    public Optional<Account> validateAccount(String username, String password) {
         try {
-            Account account = accountDao.findAccountByUsername(username);
-            if (account.getUsername().equals(username)) {
-                if (account.getPassword().equals(password)) {
+            Optional<Account> account = accountDao.findAccountByUsername(username);
+            if (account.isPresent()) {
+                if (account.get().getPassword().equals(password)) {
                     return account;
                 } else {
-                    System.out.println("ERROR: Wrong password");
+                    throw new RuntimeException("Wrong password");
                 }
             } else {
-                System.out.println("INFO: Account with name: " + username + " not found");
+                throw new RuntimeException("Account with name: " + username + " not found");
             }
         } catch (RuntimeException e) {
-            System.out.println("ERROR: Account does not exist" );
+            System.out.println("ERROR: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

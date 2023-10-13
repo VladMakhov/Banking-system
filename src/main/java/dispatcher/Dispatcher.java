@@ -3,6 +3,7 @@ package dispatcher;
 import model.Account;
 
 import java.util.List;
+import java.util.Optional;
 
 /*
 * Dispatcher interface accepts ingoing requests to further distribute them to specific service.
@@ -19,7 +20,7 @@ public interface Dispatcher {
     * Manage account life cycle (Account Service)
     * */
     void createAccount(String username, String password);
-    Account validateAccount(String username, String password);
+    Optional<Account> validateAccount(String username, String password);
     String getAccountInfo(Account account);
     String getTransactionHistory(Account account);
 

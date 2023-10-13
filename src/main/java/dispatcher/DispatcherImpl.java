@@ -8,7 +8,7 @@ import service.classes.FinanceServiceImpl;
 import util.LogService;
 
 import java.util.List;
-
+import java.util.Optional;
 
 /*
 * Implementation of dispatcher interface.
@@ -47,7 +47,7 @@ public class DispatcherImpl implements Dispatcher {
     }
 
     @Override
-    public Account validateAccount(String username, String password) {
+    public Optional<Account> validateAccount(String username, String password) {
         return accountService.validateAccount(username, password);
     }
 

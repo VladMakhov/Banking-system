@@ -4,7 +4,6 @@ import model.Account;
 import model.Transaction;
 import util.DatabaseConnection;
 
-
 /*
  * Data access interface that manages finance life cycle
  * */

@@ -2,6 +2,8 @@ package service;
 
 import model.Account;
 
+import java.util.Optional;
+
 /*
  * Service that provides functionality to create and manage accounts, logging and validation of parameters
  * */
@@ -15,7 +17,7 @@ public interface AccountService {
     /*
     * Method validates input parameters and if account with those attribute exist - returns account
     * */
-    Account validateAccount(String username, String password);
+    Optional<Account> validateAccount(String username, String password);
 
     /*
     * Get info about account

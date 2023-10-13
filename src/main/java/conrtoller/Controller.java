@@ -5,6 +5,7 @@ import dispatcher.Dispatcher;
 import dispatcher.DispatcherImpl;
 import model.Account;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 /*
@@ -16,7 +17,7 @@ public class Controller {
 
     public void start() {
         Dispatcher dispatcher = new DispatcherImpl();
-        Account account;
+        Optional<Account> account;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -34,8 +35,7 @@ public class Controller {
                 To log out type 'exit'""";
 
         System.out.println(welcome);
-        var program = "start";
-
+        Optional<Object> program = Optional.of(new Object());
         /*
          * Main execution code that allows to communicate with application with console interface
          *
@@ -43,13 +43,13 @@ public class Controller {
          * | first layer | Home page - you can register accounts or log in to one.
          * | second layer | After logging you able to manage account finances.
          * */
-        while (!program.equals("end")) {
+        while (program.isPresent()) {
             System.out.println("""
                     Sign up or Sign in?""");
             System.out.print(">> ");
-            var in = scanner.nextLine().strip().toLowerCase().strip();
+            var input = scanner.nextLine().strip().toLowerCase().strip();
 
-            switch (in) {
+            switch (input) {
                 case "register", "sign up", "signup" -> {
                     System.out.print("Enter name: ");
                     var username = scanner.nextLine().strip();
@@ -65,11 +65,9 @@ public class Controller {
 
                     account = dispatcher.validateAccount(username, password);
 
-                    if (account != null) {
-                        System.out.println("INFO: Welcome, " + account.getUsername() + "!\n" + instruction);
-                        var input = "start";
-
-                        while (!input.equals("exit")) {
+                    if (account.isPresent()) {
+                        System.out.println("INFO: Welcome, " + account.get().getUsername() + "!\n" + instruction);
+                        while (account.isPresent()) {
                             System.out.print(">> ");
                             input = scanner.nextLine().strip().toLowerCase();
 
@@ -77,22 +75,23 @@ public class Controller {
                                 case "deposit" -> {
                                     System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
-                                    dispatcher.deposit(account, amount);
+                                    dispatcher.deposit(account.get(), amount);
                                 }
                                 case "withdraw" -> {
                                     System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
-                                    dispatcher.withdraw(account, amount);
+                                    dispatcher.withdraw(account.get(), amount);
                                 }
-                                case "info" -> System.out.println(dispatcher.getAccountInfo(account));
-                                case "history" -> System.out.println(dispatcher.getTransactionHistory(account));
+                                case "info" -> System.out.println(dispatcher.getAccountInfo(account.get()));
+                                case "history" -> System.out.println(dispatcher.getTransactionHistory(account.get()));
                                 case "exit" -> {
-                                    dispatcher.addLog(account.getUsername() + " exited account");
+                                    dispatcher.addLog(account.get().getUsername() + " exited account");
+                                    account = Optional.empty();
                                     System.out.println("INFO: Bye");
                                 }
                                 case "help" -> {
                                     System.out.println("\n" + instruction);
-                                    dispatcher.addLog(account.getUsername() + " requested help menu");
+                                    dispatcher.addLog(account.get().getUsername() + " requested help menu");
                                 }
                                 default -> System.out.println("ERROR: Incorrect command");
                             }
@@ -100,7 +99,7 @@ public class Controller {
                     }
 
                 }
-                case "exit" -> program = "end";
+                case "exit" -> program = Optional.empty();
                 default -> System.out.println("ERROR: Incorrect command");
             }
         }

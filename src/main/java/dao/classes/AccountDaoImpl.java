@@ -1,13 +1,14 @@
 package dao.classes;
 
+import dao.AccountDao;
 import model.Account;
 import model.Transaction;
 import model.TransactionType;
-import dao.AccountDao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountDaoImpl implements AccountDao {
 
@@ -29,7 +30,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account findAccountByUsername(String username) {
+    public Optional<Account> findAccountByUsername(String username) {
         try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
@@ -39,16 +40,17 @@ public class AccountDaoImpl implements AccountDao {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return new Account(
+                return Optional.of(new Account(
                         resultSet.getInt(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
-                        resultSet.getInt(4));
+                        resultSet.getInt(4)));
+            } else {
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class AccountDaoImpl implements AccountDao {
         try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
-                    FROM db.transactions as tr
+                    FROM transactions as tr
                     inner join transaction_type as tt on tr.type = tt.id
                     where tr.account_id = ?;
                     """);
