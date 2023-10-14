@@ -2,7 +2,7 @@ package dao;
 
 import model.Account;
 import model.Transaction;
-import util.DatabaseConnection;
+import config.DatabaseConnectionConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import java.util.Optional;
 /*
 * Data access interface that manages account life cycle
 * */
-public interface AccountDao extends DatabaseConnection {
+public interface AccountDao extends DatabaseConnectionConfig {
     /*
     * Method accepts account to further map it to relational object and save it to database
     * */

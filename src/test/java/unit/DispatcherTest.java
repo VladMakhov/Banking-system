@@ -1,20 +1,32 @@
 package unit;
 
 
+import config.LiquibaseMigrationConfig;
 import dispatcher.Dispatcher;
 import dispatcher.DispatcherImpl;
 import model.Account;
 import org.junit.jupiter.api.*;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 
+@Testcontainers
 public class DispatcherTest {
 
     static Dispatcher dispatcher = new DispatcherImpl();
-
     static Account account;
+
+    @Container
+    public static GenericContainer<?> container =
+            new GenericContainer<>(DockerImageName.parse("postgres:latest"))
+                    .withExposedPorts(5432);
 
     @BeforeAll
     static void init() {
+        LiquibaseMigrationConfig config = new LiquibaseMigrationConfig();
+        config.run();
         dispatcher.createAccount("test", "test");
         account = dispatcher.validateAccount("test", "test").orElseThrow();
     }
@@ -22,7 +34,6 @@ public class DispatcherTest {
     @BeforeEach
     void eraseBalance() {
         account.setBalance(0);
-
     }
 
     @Test

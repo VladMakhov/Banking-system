@@ -1,4 +1,4 @@
-package util;
+package config;
 
 import liquibase.Liquibase;
 import liquibase.database.Database;
@@ -8,10 +8,12 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.List;
 
-public class LiquibaseMigration implements DatabaseConnection {
+public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
     public void run() {
-        try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
+        List<String> DatabaseConnection = load();
+        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
 
             Database database = DatabaseFactory
                     .getInstance()
@@ -22,7 +24,7 @@ public class LiquibaseMigration implements DatabaseConnection {
 
             liquibase.update();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 

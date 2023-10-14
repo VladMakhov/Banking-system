@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  database:
+    image: "postgres:latest"
+    container_name: "postgres"
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"

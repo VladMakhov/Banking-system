@@ -5,7 +5,7 @@ import service.AccountService;
 import service.FinanceService;
 import service.classes.AccountServiceImpl;
 import service.classes.FinanceServiceImpl;
-import util.LogService;
+import service.classes.LogService;
 
 import java.util.List;
 import java.util.Optional;

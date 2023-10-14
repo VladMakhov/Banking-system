@@ -7,7 +7,7 @@
 
     <changeSet id="001-create-table-accounts" author="master">
         <createTable tableName="accounts">
-            <column name="id" type="INT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="VARCHAR(255)"/>

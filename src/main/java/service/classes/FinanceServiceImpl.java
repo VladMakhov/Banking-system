@@ -6,12 +6,9 @@ import model.TransactionType;
 import dao.FinanceDao;
 import dao.classes.FinanceDaoImpl;
 import service.FinanceService;
-import util.LogService;
 
 
 public class FinanceServiceImpl implements FinanceService {
-
-    private static int TRANSACTION_ID = 1;
 
     private final FinanceDao financeDao;
     private final LogService logService;
@@ -68,7 +65,7 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     private void saveTransaction(int amount, int accountId, TransactionType type) {
-        Transaction transaction = new Transaction(TRANSACTION_ID++, accountId, amount, type);
+        Transaction transaction = new Transaction(accountId, amount, type);
         financeDao.save(transaction);
     }
 

@@ -4,15 +4,12 @@ import dao.AccountDao;
 import dao.classes.AccountDaoImpl;
 import model.Account;
 import service.AccountService;
-import util.LogService;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class AccountServiceImpl implements AccountService {
-
-    private static int ACCOUNT_ID = 1;
 
     private final AccountDao accountDao;
     private final LogService logService;
@@ -27,7 +24,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             Optional<Account> account = accountDao.findAccountByUsername(username);
             if (account.isEmpty()) {
-                accountDao.save(new Account(ACCOUNT_ID++, username, password, 0));
+                accountDao.save(new Account(username, password, 0));
                 logService.addLog("Account created with name: " + username);
                 System.out.println("INFO: Account registered successfully");
             } else {

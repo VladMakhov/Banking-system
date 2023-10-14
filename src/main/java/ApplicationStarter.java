@@ -1,13 +1,13 @@
+import config.DatabaseConnectionConfig;
+import config.LiquibaseMigrationConfig;
 import conrtoller.Controller;
-import util.LiquibaseMigration;
 
 
-public class ApplicationStarter {
+public class ApplicationStarter implements DatabaseConnectionConfig {
     public static void main(String[] args) {
-        LiquibaseMigration liquibaseMigration = new LiquibaseMigration();
+        LiquibaseMigrationConfig config = new LiquibaseMigrationConfig();
+        config.run();
         Controller controller = new Controller();
-
-        liquibaseMigration.run();
         controller.start();
     }
 }

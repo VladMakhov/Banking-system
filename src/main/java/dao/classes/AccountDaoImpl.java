@@ -14,15 +14,15 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public void save(Account account) {
-        try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
+        List<String> DatabaseConnection = load();
+        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into accounts(id, username, password, balance)
-                    values (?, ?, ?, ?);
+                    insert into accounts(username, password, balance)
+                    values (?, ?, ?);
                     """);
-            preparedStatement.setInt(1, account.getId());
-            preparedStatement.setString(2, account.getUsername());
-            preparedStatement.setString(3, account.getPassword());
-            preparedStatement.setLong(4, 0);
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            preparedStatement.setLong(3, 0);
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -31,7 +31,8 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findAccountByUsername(String username) {
-        try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
+        List<String> DatabaseConnection = load();
+        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
                     from accounts
@@ -55,7 +56,8 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Transaction> getAccountHistory(Account account) {
-        try (Connection connection = DriverManager.getConnection(URL, NAME, PASSWORD)) {
+        List<String> DatabaseConnection = load();
+        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
                     FROM transactions as tr
@@ -67,7 +69,7 @@ public class AccountDaoImpl implements AccountDao {
             List<Transaction> list = new ArrayList<>();
             while (resultSet.next()) {
                 TransactionType type = resultSet.getString(3).equals("DEPOSIT") ? TransactionType.DEPOSIT : TransactionType.WITHDRAWAL;
-                list.add(new Transaction(resultSet.getInt(1), resultSet.getInt(2), type));
+                list.add(new Transaction(resultSet.getLong(1), resultSet.getInt(2), type));
             }
             return list;
         } catch (SQLException e) {
