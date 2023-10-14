@@ -1,4 +1,4 @@
-package dispatcher;
+package gateway;
 
 import model.Account;
 
@@ -9,7 +9,7 @@ import java.util.Optional;
 * Dispatcher interface accepts ingoing requests to further distribute them to specific service.
 * It allows controller to use only one class to communicate with system instead of importing a bunch of services
 * */
-public interface Dispatcher {
+public interface Gateway {
     /*
     * Manage finances (Finance Service)
     * */

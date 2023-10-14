@@ -65,7 +65,7 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     private void saveTransaction(int amount, int accountId, TransactionType type) {
-        Transaction transaction = new Transaction(accountId, amount, type);
+        Transaction transaction = new Transaction(0, accountId, amount, type);
         financeDao.save(transaction);
     }
 

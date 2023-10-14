@@ -1,4 +1,4 @@
-package dispatcher;
+package gateway;
 
 import model.Account;
 import service.AccountService;
@@ -14,13 +14,13 @@ import java.util.Optional;
 * Implementation of dispatcher interface.
 * Facade class that connects all services into one.
 * */
-public class DispatcherImpl implements Dispatcher {
+public class GatewayImpl implements Gateway {
 
     private final FinanceService financeService;
     private final AccountService accountService;
     private final LogService logService;
 
-    public DispatcherImpl() {
+    public GatewayImpl() {
         this.financeService = new FinanceServiceImpl();
         this.accountService = new AccountServiceImpl();
         this.logService = new LogService();

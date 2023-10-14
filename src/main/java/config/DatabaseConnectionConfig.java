@@ -11,11 +11,11 @@ import java.util.Properties;
 * returns list.of(url, name, password)
 * */
 public interface DatabaseConnectionConfig {
-    default List<String> load() {
-        Properties prop = new Properties();
+    default List<String> loadDatabaseProperties() {
+        Properties properties = new Properties();
         try (FileInputStream file = new FileInputStream("src/main/resources/application.properties")) {
-            prop.load(file);
-            return List.of(prop.getProperty("db.url"), prop.getProperty("db.name"), prop.getProperty("db.password"));
+            properties.load(file);
+            return List.of(properties.getProperty("db.url"), properties.getProperty("db.name"), properties.getProperty("db.password"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

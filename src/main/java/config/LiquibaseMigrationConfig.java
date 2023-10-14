@@ -17,7 +17,7 @@ import java.util.List;
 * */
 public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
     public void run() {
-        List<String> DatabaseConnection = load();
+        List<String> DatabaseConnection = loadDatabaseProperties();
 
         try (Connection connection = DriverManager.getConnection(
                 DatabaseConnection.get(0),
@@ -38,7 +38,7 @@ public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
 
             liquibase.update();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 

@@ -11,7 +11,7 @@ public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void deposit(Account account, long amount) {
-        List<String> DatabaseConnection = load();
+        List<String> DatabaseConnection = loadDatabaseProperties();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     update private.accounts set balance = ? where id = ?;
@@ -26,7 +26,7 @@ public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void withdraw(Account account, long amount) {
-        List<String> DatabaseConnection = load();
+        List<String> DatabaseConnection = loadDatabaseProperties();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     update private.accounts set balance = ? where id = ?;
@@ -41,15 +41,15 @@ public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void save(Transaction transaction) {
-        List<String> DatabaseConnection = load();
+        List<String> DatabaseConnection = loadDatabaseProperties();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     insert into private.transactions (account_id, amount, type)
                     values (?, ?, ?);
                     """);
-            preparedStatement.setInt(1, transaction.getAccountId());
-            preparedStatement.setInt(2, transaction.getAmount());
-            preparedStatement.setInt(3, transaction.getType().getTypeId());
+            preparedStatement.setInt(1, transaction.accountId());
+            preparedStatement.setInt(2, transaction.amount());
+            preparedStatement.setInt(3, transaction.type().getTypeId());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

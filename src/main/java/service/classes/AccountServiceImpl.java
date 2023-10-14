@@ -24,7 +24,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             Optional<Account> account = accountDao.findAccountByUsername(username);
             if (account.isEmpty()) {
-                accountDao.save(new Account(username, password, 0));
+                accountDao.save(new Account(0, username, password, 0));
                 logService.addLog("Account created with name: " + username);
                 System.out.println("INFO: Account registered successfully");
             } else {
@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
                 """);
 
         String body = transactions.stream()
-                .map(tr -> String.format("%s    %s    %s", tr.getTransactionId(), tr.getAmount(), tr.getType()))
+                .map(tr -> String.format("%s    %s    %s", tr.transactionId(), tr.amount(), tr.type()))
                 .collect(Collectors.joining("\n"));
 
         return formattedResult.append(body).toString();
