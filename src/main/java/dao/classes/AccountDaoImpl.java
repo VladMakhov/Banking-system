@@ -17,7 +17,7 @@ public class AccountDaoImpl implements AccountDao {
         List<String> DatabaseConnection = load();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into accounts(username, password, balance)
+                    insert into private.accounts(username, password, balance)
                     values (?, ?, ?);
                     """);
             preparedStatement.setString(1, account.getUsername());
@@ -35,7 +35,7 @@ public class AccountDaoImpl implements AccountDao {
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
-                    from accounts
+                    from private.accounts
                     where username = ?;
                     """);
             preparedStatement.setString(1, username);
@@ -60,8 +60,8 @@ public class AccountDaoImpl implements AccountDao {
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
-                    FROM transactions as tr
-                    inner join transaction_type as tt on tr.type = tt.id
+                    FROM private.transactions as tr
+                    inner join private.transaction_type as tt on tr.type = tt.id
                     where tr.account_id = ?;
                     """);
             preparedStatement.setInt(1, account.getId());

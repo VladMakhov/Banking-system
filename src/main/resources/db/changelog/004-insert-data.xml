@@ -6,11 +6,11 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
 
     <changeSet id="004-insert-data" author="master">
-        <insert tableName="transaction_type">
+        <insert tableName="transaction_type" schemaName="private">
             <column name="id" value="1"/>
             <column name="type" value="DEPOSIT"/>
         </insert>
-        <insert tableName="transaction_type">
+        <insert tableName="transaction_type" schemaName="private">
             <column name="id" value="2"/>
             <column name="type" value="WITHDRAWAL"/>
         </insert>

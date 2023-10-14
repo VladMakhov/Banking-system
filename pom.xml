@@ -15,7 +15,7 @@
         <jupiter.version>5.10.0</jupiter.version>
         <postgres.version>42.6.0</postgres.version>
         <flyway.version>9.21.0</flyway.version>
-        <liquibase.version>4.23.0</liquibase.version>
+        <liquibase.version>4.24.0</liquibase.version>
         <testcontainers.version>1.19.0</testcontainers.version>
     </properties>
 

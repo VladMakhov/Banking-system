@@ -14,7 +14,7 @@ public class FinanceDaoImpl implements FinanceDao {
         List<String> DatabaseConnection = load();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update accounts set balance = ? where id = ?;
+                    update private.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() + amount);
             preparedStatement.setInt(2, account.getId());
@@ -29,7 +29,7 @@ public class FinanceDaoImpl implements FinanceDao {
         List<String> DatabaseConnection = load();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update accounts set balance = ? where id = ?;
+                    update private.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() - amount);
             preparedStatement.setInt(2, account.getId());
@@ -44,7 +44,7 @@ public class FinanceDaoImpl implements FinanceDao {
         List<String> DatabaseConnection = load();
         try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into transactions (account_id, amount, type)
+                    insert into private.transactions (account_id, amount, type)
                     values (?, ?, ?);
                     """);
             preparedStatement.setInt(1, transaction.getAccountId());

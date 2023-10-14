@@ -6,7 +6,7 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
 
     <changeSet id="003-create-table-transactions.xml" author="master">
-        <createTable tableName="transactions">
+        <createTable tableName="transactions" schemaName="private">
             <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -18,6 +18,8 @@
                                  baseColumnNames="account_id"
                                  constraintName="fk_account_id"
                                  referencedTableName="accounts"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 baseTableSchemaName="private"
+                                 referencedTableSchemaName="private"/>
     </changeSet>
 </databaseChangeLog>

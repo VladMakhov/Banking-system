@@ -8,13 +8,27 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.List;
 
+/*
+* Liquibase's configuration class. Reading properties from application.properties
+* Entities tables stored on private schema and migration tables on public schema
+* */
 public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
     public void run() {
         List<String> DatabaseConnection = load();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
 
+        try (Connection connection = DriverManager.getConnection(
+                DatabaseConnection.get(0),
+                DatabaseConnection.get(1),
+                DatabaseConnection.get(2))) {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("""
+                    create schema if not exists private;
+                    create schema if not exists public;
+                    """);
+            statement.close();
             Database database = DatabaseFactory
                     .getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
