@@ -6,8 +6,6 @@ import gateway.Gateway;
 import gateway.GatewayImpl;
 import model.Account;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -15,26 +13,25 @@ import org.testcontainers.utility.DockerImageName;
 
 
 @Testcontainers
-@ExtendWith(MockitoExtension.class)
 public class GatewayTest {
-
-    static Gateway gateway = new GatewayImpl();
-    static Account account;
 
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
 
+    static Gateway gateway = new GatewayImpl();
+    static Account account;
+
     @BeforeAll
     static void init() {
         container.start();
-        LiquibaseMigrationConfig config = new LiquibaseMigrationConfig();
-        config.run();
+        LiquibaseMigrationConfig liquibaseMigrationConfig = new LiquibaseMigrationConfig();
+        liquibaseMigrationConfig.run();
         gateway.createAccount("test", "test");
         account = gateway.validateAccount("test", "test").orElseThrow();
     }
 
     @BeforeEach
-    void eraseBalance() {
+    void dest() {
         account.setBalance(0);
     }
 
