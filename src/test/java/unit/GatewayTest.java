@@ -6,21 +6,23 @@ import gateway.Gateway;
 import gateway.GatewayImpl;
 import model.Account;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 
 @Testcontainers
+@ExtendWith(MockitoExtension.class)
 public class GatewayTest {
 
     static Gateway gateway = new GatewayImpl();
     static Account account;
 
     @Container
-    public static GenericContainer<?> container =
-            new GenericContainer<>(DockerImageName.parse("postgres:latest"));
+    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
 
     @BeforeAll
     static void init() {

@@ -12,9 +12,9 @@ import java.sql.Statement;
 import java.util.List;
 
 /*
-* Liquibase's configuration class. Reading properties from application.properties
-* Entities tables stored on private schema and migration tables on public schema
-* */
+ * Liquibase's configuration class. Reading properties from application.properties
+ * Entities tables stored on private schema
+ * */
 public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
     public void run() {
         List<String> DatabaseConnection = loadDatabaseProperties();

@@ -8,5 +8,6 @@ services:
       POSTGRES_DB: "postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+    command: -p 9090
     ports:
-      - "5432:5432"
+      - "9090:9090"
