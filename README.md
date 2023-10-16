@@ -1,5 +1,5 @@
 # Ylab banking system (Java core + Collections)
-####  Technologies: Java 17, JUnit, Mysql
+####  Technologies: Java 17, JUnit, PostgreSQL, Liquibase, Docker, Test containers
 
 ### To start project you need to:
 1) Change name, password and url in config/DatabaseConnectionConfig.java

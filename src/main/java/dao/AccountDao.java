@@ -10,7 +10,7 @@ import java.util.Optional;
 /*
 * Data access interface that manages account life cycle
 * */
-public interface AccountDao extends DatabaseConnectionConfig {
+public interface AccountDao {
     /*
     * Method accepts account to further map it to relational object and save it to database
     * */

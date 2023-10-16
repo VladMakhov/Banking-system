@@ -1,5 +1,6 @@
 package dao.classes;
 
+import config.DatabaseConnectionConfig;
 import dao.AccountDao;
 import model.Account;
 import model.Transaction;
@@ -12,10 +13,21 @@ import java.util.Optional;
 
 public class AccountDaoImpl implements AccountDao {
 
+    DatabaseConnectionConfig data = new DatabaseConnectionConfig();
+    private final String URL;
+    private final String USERNAME;
+    private final String PASSWORD;
+
+    public AccountDaoImpl() {
+        List<String> databaseConnection = data.loadDatabaseProperties();
+        this.URL = databaseConnection.get(0);
+        this.USERNAME = databaseConnection.get(1);
+        this.PASSWORD = databaseConnection.get(2);
+    }
+
     @Override
     public void save(Account account) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     insert into private.accounts(username, password, balance)
                     values (?, ?, ?);
@@ -31,8 +43,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findAccountByUsername(String username) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
                     from private.accounts
@@ -56,8 +67,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Transaction> getAccountHistory(Account account) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
                     FROM private.transactions as tr

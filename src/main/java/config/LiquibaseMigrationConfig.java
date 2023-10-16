@@ -15,9 +15,10 @@ import java.util.List;
  * Liquibase's configuration class. Reading properties from application.properties
  * Entities tables stored on private schema
  * */
-public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
+public class LiquibaseMigrationConfig {
     public void run() {
-        List<String> DatabaseConnection = loadDatabaseProperties();
+        DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig();
+        List<String> DatabaseConnection = databaseConnectionConfig.loadDatabaseProperties();
 
         try (Connection connection = DriverManager.getConnection(
                 DatabaseConnection.get(0),
@@ -36,6 +37,26 @@ public class LiquibaseMigrationConfig implements DatabaseConnectionConfig {
                     new ClassLoaderResourceAccessor(),
                     database);
 
+            liquibase.update();
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+    }
+
+    public void run(String URL, String USERNAME, String PASSWORD) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("""
+                    create schema if not exists private;
+                    create schema if not exists public;
+                    """);
+            statement.close();
+            Database database = DatabaseFactory
+                    .getInstance()
+                    .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            Liquibase liquibase = new Liquibase("db/changelog/changelog.xml",
+                    new ClassLoaderResourceAccessor(),
+                    database);
             liquibase.update();
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
