@@ -1,11 +1,8 @@
 package gateway;
 
-import dao.classes.AccountDaoImpl;
 import model.Account;
 import service.AccountService;
 import service.FinanceService;
-import service.classes.AccountServiceImpl;
-import service.classes.FinanceServiceImpl;
 import service.classes.LogService;
 
 import java.util.List;
@@ -21,10 +18,10 @@ public class GatewayImpl implements Gateway {
     private final AccountService accountService;
     private final LogService logService;
 
-    public GatewayImpl() {
-        this.financeService = new FinanceServiceImpl();
-        this.accountService = new AccountServiceImpl();
-        this.logService = new LogService();
+    public GatewayImpl(FinanceService financeService, AccountService accountService, LogService logService) {
+        this.financeService = financeService;
+        this.accountService = accountService;
+        this.logService = logService;
     }
 
     @Override

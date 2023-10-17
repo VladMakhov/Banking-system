@@ -5,7 +5,10 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
+import config.DatabaseConnectionConfig;
 import config.LiquibaseMigrationConfig;
+import dao.classes.AccountDaoImpl;
+import dao.classes.FinanceDaoImpl;
 import gateway.Gateway;
 import gateway.GatewayImpl;
 import model.Account;
@@ -14,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
+import service.classes.AccountServiceImpl;
+import service.classes.FinanceServiceImpl;
+import service.classes.LogService;
 
 @ExtendWith(MockitoExtension.class)
 public class GatewayTest {
@@ -35,7 +41,11 @@ public class GatewayTest {
                 .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
                         new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(9090), new ExposedPort(5432)))
                 ));
-        gateway = new GatewayImpl();
+        gateway = new GatewayImpl(
+                new FinanceServiceImpl(new FinanceDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()),
+                new AccountServiceImpl(new AccountDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()), new LogService());
         postgreSQLContainer.start();
 
         URL = postgreSQLContainer.getJdbcUrl();

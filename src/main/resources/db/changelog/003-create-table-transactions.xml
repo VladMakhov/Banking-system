@@ -8,7 +8,7 @@
     <changeSet id="003-create-table-transactions" author="master">
         <createSequence
                 sequenceName="transactions_id_seq"
-                startValue="5"/>
+                startValue="1"/>
 
         <createTable tableName="transactions" schemaName="entities">
             <column name="id" type="INT" defaultValueSequenceNext="transactions_id_seq">

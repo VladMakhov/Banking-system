@@ -10,16 +10,20 @@ import java.util.List;
 
 public class FinanceDaoImpl implements FinanceDao {
 
-    DatabaseConnectionConfig data = new DatabaseConnectionConfig();
+    DatabaseConnectionConfig data;
+
     private final String URL;
     private final String USERNAME;
     private final String PASSWORD;
 
-    public FinanceDaoImpl() {
+    public FinanceDaoImpl(DatabaseConnectionConfig data) {
+        this.data = new DatabaseConnectionConfig();
+
         List<String> databaseConnection = data.loadDatabaseProperties();
         this.URL = databaseConnection.get(0);
         this.USERNAME = databaseConnection.get(1);
         this.PASSWORD = databaseConnection.get(2);
+
     }
 
     @Override

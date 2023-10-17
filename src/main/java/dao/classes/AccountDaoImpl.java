@@ -13,20 +13,24 @@ import java.util.Optional;
 
 public class AccountDaoImpl implements AccountDao {
 
-    DatabaseConnectionConfig data = new DatabaseConnectionConfig();
+    DatabaseConnectionConfig data;
+
     private final String URL;
     private final String USERNAME;
     private final String PASSWORD;
 
-    public AccountDaoImpl() {
+    public AccountDaoImpl(DatabaseConnectionConfig data) {
+        this.data = data;
+
         List<String> databaseConnection = data.loadDatabaseProperties();
         this.URL = databaseConnection.get(0);
         this.USERNAME = databaseConnection.get(1);
         this.PASSWORD = databaseConnection.get(2);
+
     }
 
     @Override
-    public void save(Account account) {
+    public Account save(Account account) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     insert into entities.accounts(username, password, balance)
@@ -36,6 +40,7 @@ public class AccountDaoImpl implements AccountDao {
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.setInt(3, 0);
             preparedStatement.execute();
+            return account;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

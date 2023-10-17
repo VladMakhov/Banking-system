@@ -1,7 +1,6 @@
 package service.classes;
 
 import dao.AccountDao;
-import dao.classes.AccountDaoImpl;
 import model.Account;
 import service.AccountService;
 
@@ -14,19 +13,19 @@ public class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final LogService logService;
 
-    public AccountServiceImpl() {
-        this.accountDao = new AccountDaoImpl();
-        this.logService = new LogService();
+    public AccountServiceImpl(AccountDao accountDao, LogService logService) {
+        this.accountDao = accountDao;
+        this.logService = logService;
     }
 
     @Override
-    public void createAccount(String username, String password) {
+    public Account createAccount(String username, String password) {
         try {
             Optional<Account> account = accountDao.findAccountByUsername(username);
             if (account.isEmpty()) {
-                accountDao.save(new Account(0, username, password, 0));
                 logService.addLog("Account created with name: " + username);
                 System.out.println("INFO: Account registered successfully");
+                return accountDao.save(new Account(0, username, password, 0));
             } else {
                 throw new RuntimeException("Account with name: " + username + " already exists");
             }
@@ -34,6 +33,7 @@ public class AccountServiceImpl implements AccountService {
             System.out.println("ERROR: " + e.getMessage());
             logService.addLog(e.getMessage());
         }
+        return null;
     }
 
     @Override

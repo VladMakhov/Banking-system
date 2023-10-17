@@ -2,7 +2,6 @@ package dao;
 
 import model.Account;
 import model.Transaction;
-import config.DatabaseConnectionConfig;
 
 /*
  * Data access interface that manages finance life cycle
