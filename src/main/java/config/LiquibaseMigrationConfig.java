@@ -29,21 +29,21 @@ public class LiquibaseMigrationConfig {
 
 
     /*
-    * 'databasechangelog' and 'databasechangeloglock' creates in 'migration' schema
-    * and all the rest tables in 'private' schema
+    * 'databasechangelog' and 'databasechangeloglock' creates in 'utilities' schema
+    * and all the rest tables in 'entities' schema
     * */
     private static void execute(String URL, String USERNAME, String PASSWORD) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             Statement statement = connection.createStatement();
             statement.executeUpdate("""
-                    create schema if not exists private;
-                    create schema if not exists migration;
+                    create schema if not exists entities;
+                    create schema if not exists utilities;
                     """);
             statement.close();
             Database database = DatabaseFactory
                     .getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            database.setDefaultSchemaName("migration");
+            database.setDefaultSchemaName("utilities");
             Liquibase liquibase = new Liquibase("db/changelog/changelog.xml",
                     new ClassLoaderResourceAccessor(),
                     database);

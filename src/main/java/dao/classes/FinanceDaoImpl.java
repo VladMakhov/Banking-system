@@ -26,7 +26,7 @@ public class FinanceDaoImpl implements FinanceDao {
     public void deposit(Account account, long amount) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update private.accounts set balance = ? where id = ?;
+                    update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() + amount);
             preparedStatement.setInt(2, account.getId());
@@ -40,7 +40,7 @@ public class FinanceDaoImpl implements FinanceDao {
     public void withdraw(Account account, long amount) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update private.accounts set balance = ? where id = ?;
+                    update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() - amount);
             preparedStatement.setInt(2, account.getId());
@@ -54,7 +54,7 @@ public class FinanceDaoImpl implements FinanceDao {
     public void save(Transaction transaction) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into private.transactions (account_id, amount, type)
+                    insert into entities.transactions (account_id, amount, type)
                     values (?, ?, ?);
                     """);
             preparedStatement.setInt(1, transaction.accountId());

@@ -29,7 +29,7 @@ public class AccountDaoImpl implements AccountDao {
     public void save(Account account) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into private.accounts(username, password, balance)
+                    insert into entities.accounts(username, password, balance)
                     values (?, ?, ?);
                     """);
             preparedStatement.setString(1, account.getUsername());
@@ -46,7 +46,7 @@ public class AccountDaoImpl implements AccountDao {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
-                    from private.accounts
+                    from entities.accounts
                     where username = ?;
                     """);
             preparedStatement.setString(1, username);
@@ -70,8 +70,8 @@ public class AccountDaoImpl implements AccountDao {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
-                    FROM private.transactions as tr
-                    inner join private.transaction_type as tt on tr.type = tt.id
+                    FROM entities.transactions as tr
+                    inner join entities.transaction_type as tt on tr.type = tt.id
                     where tr.account_id = ?
                     order by tr.id desc;
                     """);
