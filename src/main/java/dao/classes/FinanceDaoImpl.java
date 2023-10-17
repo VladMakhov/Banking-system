@@ -29,15 +29,20 @@ public class FinanceDaoImpl implements FinanceDao {
     @Override
     public void deposit(Account account, long amount) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() + amount);
             preparedStatement.setInt(2, account.getId());
+
             preparedStatement.execute();
             connection.commit();
+            preparedStatement.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -46,15 +51,20 @@ public class FinanceDaoImpl implements FinanceDao {
     @Override
     public void withdraw(Account account, long amount) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() - amount);
             preparedStatement.setInt(2, account.getId());
             preparedStatement.execute();
+
+            preparedStatement.close();
             connection.commit();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -63,8 +73,10 @@ public class FinanceDaoImpl implements FinanceDao {
     @Override
     public void save(Transaction transaction) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     insert into entities.transactions (account_id, amount, type)
                     values (?, ?, ?);
@@ -72,8 +84,11 @@ public class FinanceDaoImpl implements FinanceDao {
             preparedStatement.setInt(1, transaction.accountId());
             preparedStatement.setInt(2, transaction.amount());
             preparedStatement.setInt(3, transaction.type().getTypeId());
+
             preparedStatement.execute();
             connection.commit();
+            preparedStatement.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
