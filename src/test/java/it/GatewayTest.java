@@ -1,4 +1,4 @@
-package unit;
+package it;
 
 
 import com.github.dockerjava.api.model.ExposedPort;
@@ -25,7 +25,7 @@ public class GatewayTest {
     static String NAME;
     static String PASSWORD;
 
-    static  {
+    static {
         postgreSQLContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
                 .withDatabaseName("postgres")
                 .withUsername("postgres")
@@ -37,6 +37,7 @@ public class GatewayTest {
                 ));
         gateway = new GatewayImpl();
         postgreSQLContainer.start();
+
         URL = postgreSQLContainer.getJdbcUrl();
         NAME = postgreSQLContainer.getUsername();
         PASSWORD = postgreSQLContainer.getPassword();

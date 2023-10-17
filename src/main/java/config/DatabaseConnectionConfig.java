@@ -17,9 +17,9 @@ public class DatabaseConnectionConfig {
         try (FileInputStream file = new FileInputStream("src/main/resources/application.properties")) {
             properties.load(file);
             List<String> property = List.of(
-                    properties.getProperty("db.url"),
-                    properties.getProperty("db.name"),
-                    properties.getProperty("db.password"));
+                    properties.getProperty("datasource.connection.url"),
+                    properties.getProperty("datasource.connection.name"),
+                    properties.getProperty("datasource.connection.password"));
             System.out.println("PROPERTIES: " + property);
             return property;
         } catch (IOException e) {
