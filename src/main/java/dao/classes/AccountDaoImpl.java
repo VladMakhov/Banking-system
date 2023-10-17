@@ -1,5 +1,6 @@
 package dao.classes;
 
+import config.DatabaseConnectionConfig;
 import dao.AccountDao;
 import model.Account;
 import model.Transaction;
@@ -12,18 +13,42 @@ import java.util.Optional;
 
 public class AccountDaoImpl implements AccountDao {
 
+    DatabaseConnectionConfig data;
+
+    private final String URL;
+    private final String USERNAME;
+    private final String PASSWORD;
+
+    public AccountDaoImpl(DatabaseConnectionConfig data) {
+        this.data = data;
+
+        List<String> databaseConnection = data.loadDatabaseProperties();
+        this.URL = databaseConnection.get(0);
+        this.USERNAME = databaseConnection.get(1);
+        this.PASSWORD = databaseConnection.get(2);
+
+    }
+
     @Override
-    public void save(Account account) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+    public Account save(Account account) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into private.accounts(username, password, balance)
+                    insert into entities.accounts(username, password, balance)
                     values (?, ?, ?);
                     """);
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.setInt(3, 0);
             preparedStatement.execute();
+
+            connection.commit();
+            preparedStatement.close();
+
+            return account;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -31,15 +56,22 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findAccountByUsername(String username) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
-                    from private.accounts
+                    from entities.accounts
                     where username = ?;
                     """);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
+
+            connection.commit();
+            preparedStatement.close();
+
             if (resultSet.next()) {
                 return Optional.of(new Account(
                         resultSet.getInt(1),
@@ -49,6 +81,7 @@ public class AccountDaoImpl implements AccountDao {
             } else {
                 return Optional.empty();
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -56,17 +89,24 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Transaction> getAccountHistory(Account account) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
-                    FROM private.transactions as tr
-                    inner join private.transaction_type as tt on tr.type = tt.id
+                    FROM entities.transactions as tr
+                    inner join entities.transaction_type as tt on tr.type = tt.id
                     where tr.account_id = ?
                     order by tr.id desc;
                     """);
             preparedStatement.setInt(1, account.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
+
+            connection.commit();
+            preparedStatement.close();
+
             List<Transaction> list = new ArrayList<>();
             while (resultSet.next()) {
                 TransactionType type = resultSet.getString(3).equals("DEPOSIT") ? TransactionType.DEPOSIT : TransactionType.WITHDRAWAL;

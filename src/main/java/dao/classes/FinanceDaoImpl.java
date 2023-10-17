@@ -1,5 +1,6 @@
 package dao.classes;
 
+import config.DatabaseConnectionConfig;
 import model.Account;
 import model.Transaction;
 import dao.FinanceDao;
@@ -9,16 +10,39 @@ import java.util.List;
 
 public class FinanceDaoImpl implements FinanceDao {
 
+    DatabaseConnectionConfig data;
+
+    private final String URL;
+    private final String USERNAME;
+    private final String PASSWORD;
+
+    public FinanceDaoImpl(DatabaseConnectionConfig data) {
+        this.data = new DatabaseConnectionConfig();
+
+        List<String> databaseConnection = data.loadDatabaseProperties();
+        this.URL = databaseConnection.get(0);
+        this.USERNAME = databaseConnection.get(1);
+        this.PASSWORD = databaseConnection.get(2);
+
+    }
+
     @Override
     public void deposit(Account account, long amount) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update private.accounts set balance = ? where id = ?;
+                    update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() + amount);
             preparedStatement.setInt(2, account.getId());
+
             preparedStatement.execute();
+            connection.commit();
+            preparedStatement.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -26,14 +50,21 @@ public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void withdraw(Account account, long amount) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    update private.accounts set balance = ? where id = ?;
+                    update entities.accounts set balance = ? where id = ?;
                     """);
             preparedStatement.setLong(1, account.getBalance() - amount);
             preparedStatement.setInt(2, account.getId());
             preparedStatement.execute();
+
+            preparedStatement.close();
+            connection.commit();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -41,16 +72,23 @@ public class FinanceDaoImpl implements FinanceDao {
 
     @Override
     public void save(Transaction transaction) {
-        List<String> DatabaseConnection = loadDatabaseProperties();
-        try (Connection connection = DriverManager.getConnection(DatabaseConnection.get(0), DatabaseConnection.get(1), DatabaseConnection.get(2))) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    insert into private.transactions (account_id, amount, type)
+                    insert into entities.transactions (account_id, amount, type)
                     values (?, ?, ?);
                     """);
             preparedStatement.setInt(1, transaction.accountId());
             preparedStatement.setInt(2, transaction.amount());
             preparedStatement.setInt(3, transaction.type().getTypeId());
+
             preparedStatement.execute();
+            connection.commit();
+            preparedStatement.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,9 +1,15 @@
 package conrtoller;
 
 
+import config.DatabaseConnectionConfig;
+import dao.classes.AccountDaoImpl;
+import dao.classes.FinanceDaoImpl;
 import gateway.Gateway;
 import gateway.GatewayImpl;
 import model.Account;
+import service.classes.AccountServiceImpl;
+import service.classes.FinanceServiceImpl;
+import service.classes.LogService;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -16,7 +22,12 @@ import java.util.Scanner;
 public class Controller {
 
     public void start() {
-        Gateway gateway = new GatewayImpl();
+        Gateway gateway = new GatewayImpl(
+                new FinanceServiceImpl(new FinanceDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()),
+                new AccountServiceImpl(new AccountDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()), new LogService());
+
         Optional<Account> account;
 
         Scanner scanner = new Scanner(System.in);

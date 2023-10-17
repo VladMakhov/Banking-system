@@ -12,7 +12,7 @@ public interface AccountService {
      * Method accepts username and password to create new account and saves it to storage.
      * Before creating it checks if account with that username already exist
      * */
-    void createAccount(String username, String password);
+    Account createAccount(String username, String password);
 
     /*
     * Method validates input parameters and if account with those attribute exist - returns account

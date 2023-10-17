@@ -1,38 +1,77 @@
-package unit;
+package it;
 
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
+import config.DatabaseConnectionConfig;
 import config.LiquibaseMigrationConfig;
+import dao.classes.AccountDaoImpl;
+import dao.classes.FinanceDaoImpl;
 import gateway.Gateway;
 import gateway.GatewayImpl;
 import model.Account;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import service.classes.AccountServiceImpl;
+import service.classes.FinanceServiceImpl;
+import service.classes.LogService;
 
-
-@Testcontainers
+@ExtendWith(MockitoExtension.class)
 public class GatewayTest {
 
-    @Container
-    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
-
-    static Gateway gateway = new GatewayImpl();
+    public static PostgreSQLContainer<?> postgreSQLContainer;
+    static Gateway gateway;
     static Account account;
+    static String URL;
+    static String NAME;
+    static String PASSWORD;
+
+    static {
+        postgreSQLContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
+                .withDatabaseName("postgres")
+                .withUsername("postgres")
+                .withPassword("postgres")
+                .withReuse(true)
+                .withExposedPorts(5432)
+                .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
+                        new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(9090), new ExposedPort(5432)))
+                ));
+        gateway = new GatewayImpl(
+                new FinanceServiceImpl(new FinanceDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()),
+                new AccountServiceImpl(new AccountDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()), new LogService());
+        postgreSQLContainer.start();
+
+        URL = postgreSQLContainer.getJdbcUrl();
+        NAME = postgreSQLContainer.getUsername();
+        PASSWORD = postgreSQLContainer.getPassword();
+    }
 
     @BeforeAll
     static void init() {
-        container.start();
+        System.out.println(URL);
+        System.out.println(NAME);
+        System.out.println(PASSWORD);
         LiquibaseMigrationConfig liquibaseMigrationConfig = new LiquibaseMigrationConfig();
-        liquibaseMigrationConfig.run();
+        liquibaseMigrationConfig.run(URL, NAME, PASSWORD);
         gateway.createAccount("test", "test");
         account = gateway.validateAccount("test", "test").orElseThrow();
     }
 
     @BeforeEach
-    void dest() {
+    void eraseBalance() {
         account.setBalance(0);
+    }
+
+    @AfterAll
+    static void closePostgres() {
+        postgreSQLContainer.close();
     }
 
     @Test

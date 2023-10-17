@@ -2,12 +2,11 @@ package dao;
 
 import model.Account;
 import model.Transaction;
-import config.DatabaseConnectionConfig;
 
 /*
  * Data access interface that manages finance life cycle
  * */
-public interface FinanceDao extends DatabaseConnectionConfig {
+public interface FinanceDao {
     /*
     * Method adding validated amount to account
     * */

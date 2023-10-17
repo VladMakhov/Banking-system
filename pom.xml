@@ -14,10 +14,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jupiter.version>5.10.0</jupiter.version>
         <postgres.version>42.6.0</postgres.version>
-        <flyway.version>9.21.0</flyway.version>
         <liquibase.version>4.24.0</liquibase.version>
         <testcontainers.version>1.19.0</testcontainers.version>
         <mockito.version>5.4.0</mockito.version>
+        <defaultSchemaName>private</defaultSchemaName>
     </properties>
 
     <dependencies>
@@ -32,11 +32,6 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
