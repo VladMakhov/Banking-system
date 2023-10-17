@@ -22,20 +22,11 @@ import java.util.Scanner;
 public class Controller {
 
     public void start() {
-        Gateway gateway =
-                new GatewayImpl(
-                        new FinanceServiceImpl(new FinanceDaoImpl(
-                                new DatabaseConnectionConfig()
-                        ),
-                                new LogService()
-                        ),
-                        new AccountServiceImpl(new AccountDaoImpl(
-                                new DatabaseConnectionConfig()
-                        ),
-                                new LogService()
-                        ),
-                        new LogService()
-                );
+        Gateway gateway = new GatewayImpl(
+                new FinanceServiceImpl(new FinanceDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()),
+                new AccountServiceImpl(new AccountDaoImpl(
+                        new DatabaseConnectionConfig()), new LogService()), new LogService());
 
         Optional<Account> account;
 

@@ -32,6 +32,8 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Account save(Account account) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     insert into entities.accounts(username, password, balance)
                     values (?, ?, ?);
@@ -40,6 +42,7 @@ public class AccountDaoImpl implements AccountDao {
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.setInt(3, 0);
             preparedStatement.execute();
+            connection.commit();
             return account;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -49,6 +52,8 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Optional<Account> findAccountByUsername(String username) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     select *
                     from entities.accounts
@@ -56,6 +61,7 @@ public class AccountDaoImpl implements AccountDao {
                     """);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
+            connection.commit();
             if (resultSet.next()) {
                 return Optional.of(new Account(
                         resultSet.getInt(1),
@@ -73,6 +79,8 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public List<Transaction> getAccountHistory(Account account) {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             PreparedStatement preparedStatement = connection.prepareStatement("""
                     SELECT tr.id, tr.amount, tt.type
                     FROM entities.transactions as tr
@@ -82,6 +90,7 @@ public class AccountDaoImpl implements AccountDao {
                     """);
             preparedStatement.setInt(1, account.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
+            connection.commit();
             List<Transaction> list = new ArrayList<>();
             while (resultSet.next()) {
                 TransactionType type = resultSet.getString(3).equals("DEPOSIT") ? TransactionType.DEPOSIT : TransactionType.WITHDRAWAL;
