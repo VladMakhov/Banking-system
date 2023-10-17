@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgres:
+    image: "postgres:latest"
+    container_name: "postgres"
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    command: -p 9090
+    ports:
+      - "9090:9090"

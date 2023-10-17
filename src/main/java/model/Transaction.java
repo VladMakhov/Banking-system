@@ -1,5 +1,6 @@
 package model;
 
 
-public record Transaction(long transactionId, String account, long amount, TransactionType type) {
+public record Transaction(int transactionId, int accountId, int amount, TransactionType type) {
+
 }

@@ -1,10 +1,11 @@
 package conrtoller;
 
 
-import dispatcher.Dispatcher;
-import dispatcher.DispatcherImpl;
+import gateway.Gateway;
+import gateway.GatewayImpl;
 import model.Account;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 /*
@@ -15,8 +16,8 @@ import java.util.Scanner;
 public class Controller {
 
     public void start() {
-        Dispatcher dispatcher = new DispatcherImpl();
-        Account account;
+        Gateway gateway = new GatewayImpl();
+        Optional<Account> account;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -34,8 +35,7 @@ public class Controller {
                 To log out type 'exit'""";
 
         System.out.println(welcome);
-        var program = "start";
-
+        Optional<Object> program = Optional.of(new Object());
         /*
          * Main execution code that allows to communicate with application with console interface
          *
@@ -43,20 +43,19 @@ public class Controller {
          * | first layer | Home page - you can register accounts or log in to one.
          * | second layer | After logging you able to manage account finances.
          * */
-        while (!program.equals("end")) {
+        while (program.isPresent()) {
             System.out.println("""
                     Sign up or Sign in?""");
             System.out.print(">> ");
-            var in = scanner.nextLine().strip().toLowerCase().strip();
+            var input = scanner.nextLine().strip().toLowerCase().strip();
 
-            switch (in) {
+            switch (input) {
                 case "register", "sign up", "signup" -> {
                     System.out.print("Enter name: ");
                     var username = scanner.nextLine().strip();
                     System.out.print("Enter password: ");
                     var password = scanner.nextLine().strip();
-                    boolean isCreated = dispatcher.createAccount(username, password);
-                    if (isCreated) System.out.println("Account registered successfully");
+                    gateway.createAccount(username, password);
                 }
                 case "login", "sign in", "signin" -> {
                     System.out.print("Enter name: ");
@@ -64,36 +63,35 @@ public class Controller {
                     System.out.print("Enter password: ");
                     var password = scanner.nextLine().strip();
 
-                    account = dispatcher.validateAccount(username, password);
+                    account = gateway.validateAccount(username, password);
 
-                    if (account != null) {
-                        System.out.println("Welcome, " + account.getUsername() + "!\n" + instruction);
-                        var input = "start";
-
-                        while (!input.equals("exit")) {
+                    if (account.isPresent()) {
+                        System.out.println("INFO: Welcome, " + account.get().getUsername() + "!\n" + instruction);
+                        while (account.isPresent()) {
                             System.out.print(">> ");
                             input = scanner.nextLine().strip().toLowerCase();
 
                             switch (input) {
                                 case "deposit" -> {
-                                    System.out.print("How much money would you like to deposit: ");
+                                    System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
-                                    dispatcher.deposit(account, amount);
+                                    gateway.deposit(account.get(), amount);
                                 }
                                 case "withdraw" -> {
-                                    System.out.print("How much money would you like to withdraw: ");
+                                    System.out.print("Amount: ");
                                     var amount = scanner.nextLine().strip();
-                                    dispatcher.withdraw(account, amount);
+                                    gateway.withdraw(account.get(), amount);
                                 }
-                                case "info" -> System.out.println(dispatcher.getAccountInfo(account));
-                                case "history" -> System.out.println(dispatcher.getTransactionHistory(account));
+                                case "info" -> System.out.println(gateway.getAccountInfo(account.get()));
+                                case "history" -> System.out.println(gateway.getTransactionHistory(account.get()));
                                 case "exit" -> {
-                                    dispatcher.addLog(account.getUsername() + " exited his account");
-                                    System.out.println("Bye");
+                                    gateway.addLog(account.get().getUsername() + " exited account");
+                                    account = Optional.empty();
+                                    System.out.println("INFO: Bye");
                                 }
                                 case "help" -> {
                                     System.out.println("\n" + instruction);
-                                    dispatcher.addLog(account.getUsername() + " requested help menu");
+                                    gateway.addLog(account.get().getUsername() + " requested help menu");
                                 }
                                 default -> System.out.println("ERROR: Incorrect command");
                             }
@@ -101,12 +99,12 @@ public class Controller {
                     }
 
                 }
-                case "exit" -> program = "end";
+                case "exit" -> program = Optional.empty();
                 default -> System.out.println("ERROR: Incorrect command");
             }
         }
         System.out.println("Logs:");
-        dispatcher.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
+        gateway.getLogs().stream().map(s -> "> " + s).forEach(System.out::println);
     }
 
 }
