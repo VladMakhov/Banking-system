@@ -46,7 +46,7 @@ public class AccountDaoImpl implements AccountDao {
             preparedStatement.execute();
 
             connection.commit();
-            preparedStatement.close();
+
 
             return account;
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class AccountDaoImpl implements AccountDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            preparedStatement.close();
+
 
             if (resultSet.next()) {
                 return Optional.of(new Account(
@@ -105,7 +105,7 @@ public class AccountDaoImpl implements AccountDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            preparedStatement.close();
+
 
             List<Transaction> list = new ArrayList<>();
             while (resultSet.next()) {
