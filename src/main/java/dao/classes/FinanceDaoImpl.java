@@ -41,7 +41,6 @@ public class FinanceDaoImpl implements FinanceDao {
 
             preparedStatement.execute();
             connection.commit();
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -62,7 +61,6 @@ public class FinanceDaoImpl implements FinanceDao {
             preparedStatement.setInt(2, account.getId());
             preparedStatement.execute();
 
-            preparedStatement.close();
             connection.commit();
 
         } catch (SQLException e) {
@@ -87,7 +85,6 @@ public class FinanceDaoImpl implements FinanceDao {
 
             preparedStatement.execute();
             connection.commit();
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
